@@ -1,5 +1,5 @@
-# Realtime-Emotion-Inference
-Single Modality Emotion Inference in Real-time
+# The Expression - CMPT 419 Project
+An Emotional Game for Social Expression Learning
 
 How to Use:
 
