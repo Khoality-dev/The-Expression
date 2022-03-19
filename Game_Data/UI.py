@@ -11,7 +11,7 @@ class Game_Object:
         pass
 
 class Bubble_Object(Game_Object):
-    def __init__(self, x, y, next_x, next_y, r, w = 0, color = (255,255,255), velocity = np.zeros(2, dtype=np.int32), lifetime = 100, opacity=100):
+    def __init__(self, x, y, r, w = 0, color = (255,255,255), velocity = np.zeros(2, dtype=np.int32), lifetime = np.random.randint(10,1000), opacity=np.random.randint(100,500)):
         super().__init__(x, y, opacity)
         self.color = color
         self.r = r
@@ -23,7 +23,7 @@ class Bubble_Object(Game_Object):
         self.surface = pygame.Surface((self.r * 2, self.r * 2), pygame.SRCALPHA)
         pygame.draw.circle(self.surface, self.color, (self.r,self.r), self.r, self.w)
 
-    def update(self):
+    def decrease_velocity(self):
         self.acceleration[0] = -np.sign(self.velocity[0])
         self.acceleration[1] = -np.sign(self.velocity[1])
 
@@ -31,11 +31,13 @@ class Bubble_Object(Game_Object):
             self.velocity += self.acceleration
         else:
             self.velocity = np.zeros(2, dtype=np.int32)
-            if (self.lifetime > 0):
-                self.lifetime += -2
-            else:
-                if (self.opacity > 0):
-                    self.opacity += -2
+
+    def update(self):
+        if self.lifetime > 0:
+            self.lifetime += -1
+        else:
+            if (self.opacity > 0):
+                self.opacity += -2
 
         self.x += self.velocity[0]
         self.y += self.velocity[1]
