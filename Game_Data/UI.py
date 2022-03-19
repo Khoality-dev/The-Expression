@@ -11,24 +11,39 @@ class Game_Object:
         pass
 
 class Bubble_Object(Game_Object):
-    def __init__(self, x, y, r, w = 0, color = (255,255,255), opacity=1):
+    def __init__(self, x, y, next_x, next_y, r, w = 0, color = (255,255,255), velocity = np.zeros(2, dtype=np.int32), lifetime = 100, opacity=100):
         super().__init__(x, y, opacity)
         self.color = color
         self.r = r
         self.w = w
-        self.velocity = np.array((0,-1))
-        self.time = 0
-        self.on_screen = True
+        self.velocity = velocity
+        self.acceleration = np.zeros(2, dtype=np.int32)
+
+        self.lifetime = lifetime
+        self.surface = pygame.Surface((self.r * 2, self.r * 2), pygame.SRCALPHA)
+        pygame.draw.circle(self.surface, self.color, (self.r,self.r), self.r, self.w)
 
     def update(self):
+        self.acceleration[0] = -np.sign(self.velocity[0])
+        self.acceleration[1] = -np.sign(self.velocity[1])
+
+        if np.abs(self.velocity).any() > 0:
+            self.velocity += self.acceleration
+        else:
+            self.velocity = np.zeros(2, dtype=np.int32)
+            if (self.lifetime > 0):
+                self.lifetime += -2
+            else:
+                if (self.opacity > 0):
+                    self.opacity += -2
+
         self.x += self.velocity[0]
         self.y += self.velocity[1]
 
-        if (self.y+self.r<0):
-            self.on_screen = False
 
     def draw(self, screen):
-        pygame.draw.circle(screen, self.color, (int(self.x), int(self.y)), self.r, self.w)
+        self.surface.set_alpha(self.opacity)
+        screen.blit(self.surface, (self.x, self.y))
 
 class Animated_Background(Game_Object):
     def __init__(self, x, y, height, width, opacity = 1.0):
