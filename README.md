@@ -8,7 +8,7 @@ An Emotional Game for Social Expression Learning
 ```bash
 python -m venv [enviroment name]
 ```
-- Instal necessary packages
+- Install dependencies
 ```bash
 pip install -r requirements.txt
 ```
