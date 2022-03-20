@@ -1,8 +1,9 @@
+from re import S
 import pygame
 import numpy as np
 
 class Game_Object:
-    def __init__(self, x, y, opacity = 1.0):
+    def __init__(self, x, y, opacity = 100):
         self.x = x
         self.y = y
         self.opacity = opacity
@@ -40,17 +41,18 @@ class Animated_Background(Game_Object):
     def draw(self):
         return
 
-class Text(Game_Object):
-    def __init__(self, x, y, height, width, text = None, opacity = 1.0, font = 'Default'):
-        super().__init__(self, x, y, opacity)
-        self.height = height
-        self.width = width
-        self.text = text
+class Text_Object(Game_Object):
+    def __init__(self, x, y, size, text, opacity = 100, font = 'Default'):
+        super().__init__(x, y, opacity)
         self.font = font
-        return
-
+        self.font = pygame.font.Font(font, size)
+        self.text = pygame.font.Font.render(self.font, text, True, (0,0,0))
+        self.size = size
     def update(self):
         return
+
+    def draw(self, screen):
+        screen.blit(self.text, (self.x, self.y))
 
 class Button(Game_Object):
     def __init__(self, x, y, height, width, title = None, opacity = 1.0, state = 0):

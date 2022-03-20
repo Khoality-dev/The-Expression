@@ -2,12 +2,12 @@ import pygame
 import numpy as np
 import argparse
 
-from Game_Data.UI import Bubble_Object
+from Game_Data.UI import *
 
 def setup():
     pygame.init()
     screen = pygame.display.set_mode((800, 600))
-    background = pygame.Surface((800,600), pygame.SRCALPHA)
+
     clock = pygame.time.Clock()
     
     return screen, clock
@@ -16,7 +16,8 @@ def draw(screen, clock, FPS, bubble_list):
 
     clock.tick(FPS)
     screen.blit(background, (0,0))
-    
+    text.update()
+    text.draw(screen)
     for bubble_idx in range(len(bubble_list)):
         if bubble_list[bubble_idx].on_screen == False:
             bubble_list[bubble_idx] = Bubble_Object(x = np.random.randint(0,800), y = np.random.randint(600,1200), r = np.random.randint(5,20), color=(10,240,240))
@@ -33,7 +34,7 @@ if __name__ == "__main__":
 
     screen, clock = setup()
     clock.tick(FPS)
-
+    text = Text_Object(x = 350, y = 400, size = 32, text = "Play", font = 'freesansbold.ttf')
     background = pygame.image.load('Game_Data/background/blue.png')
     bubble_list = []
     for i in range(50):
