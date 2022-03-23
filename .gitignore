@@ -127,4 +127,9 @@ dmypy.json
 
 # Pyre type checker
 .pyre/
+
+# Others
 Game_Data/background/emojis
+Dataset/facial_data
+Dataset/src_data
+Dataset/facial_data.h5
