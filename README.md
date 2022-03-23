@@ -5,12 +5,20 @@ An Emotional Game for Social Expression Learning
 
 ## How to Use:
 - Setup a virtual environment
+```bash
 python -m venv [enviroment name]
-- Instal necessary packages
+```
+- Install dependencies
+```bash
 pip install -r requirements.txt
+```
 - Train new model
+```bash
 python train.py
+```
 - To play
+```bash
 python game.py or execute game.exe
+```
 
 
