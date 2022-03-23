@@ -1,6 +1,7 @@
 import json
 import os
 import shutil
+import numpy as np
 import pandas as pd
 from alive_progress import alive_bar
 
@@ -13,6 +14,8 @@ if __name__ == "__main__":
     arousals = []
     new_file_names = []
     valences = []
+    landmarks = []
+
 
     folders = [f for f in os.listdir(data_dir) if os.path.isdir(os.path.join(data_dir, f))]
     print("Formating file structure...")
@@ -32,8 +35,13 @@ if __name__ == "__main__":
                     new_file_names.append(folder_name + "_" + frame + ".png")
                     arousals.append(jsonData[frame]['arousal'])
                     valences.append(jsonData[frame]['valence'])
+                    landmarks.append(np.array(jsonData[frame]['landmarks']))
             bar()
     print("Done!")
     
     dict = {'file_name': new_file_names, 'arousal': arousals, 'valence': valences}
+    landmarks = np.reshape(np.array(landmarks), (len(landmarks), len(landmarks[0]) * 2))
+    for landmark_idx in range(len(landmarks[0])//2):
+        dict["landmark_x_"+str(landmark_idx)] = landmarks[:, 2*landmark_idx]
+        dict["landmark_y_"+str(landmark_idx)] = landmarks[:, 2*landmark_idx+1]
     pd.DataFrame(dict).to_csv(os.path.join(target_dir, "label_data.csv"), index=False)
