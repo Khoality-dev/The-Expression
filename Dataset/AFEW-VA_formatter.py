@@ -37,11 +37,11 @@ if __name__ == "__main__":
                     valences.append(jsonData[frame]['valence'])
                     landmarks.append(np.array(jsonData[frame]['landmarks']))
             bar()
-    print("Done!")
-    
+    print("Extracting metainfo...")
     dict = {'file_name': new_file_names, 'arousal': arousals, 'valence': valences}
     landmarks = np.reshape(np.array(landmarks), (len(landmarks), len(landmarks[0]) * 2))
     for landmark_idx in range(len(landmarks[0])//2):
         dict["landmark_x_"+str(landmark_idx)] = landmarks[:, 2*landmark_idx]
         dict["landmark_y_"+str(landmark_idx)] = landmarks[:, 2*landmark_idx+1]
+    print("Done!")
     pd.DataFrame(dict).to_csv(os.path.join(target_dir, "label_data.csv"), index=False)

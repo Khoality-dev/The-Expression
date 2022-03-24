@@ -32,30 +32,32 @@ def extractor(args):
 
     landmarks = pd.read_csv("src_data/label_data.csv")
 
+    file_names = landmarks.iloc[:,int(landmarks.columns.get_loc('file_name'))].to_numpy()
     landmarks = landmarks.iloc[:,int(landmarks.columns.get_loc('landmark_x_0')):int(landmarks.columns.get_loc('landmark_y_67')+1)].to_numpy()
 
-    img_files = [f for f in os.listdir(data_dir) if os.path.isfile(os.path.join(data_dir, f)) and (os.path.splitext(f)[1] == '.png' or os.path.splitext(f)[1] == '.jpg')]
     print("Extracting faces from images")
 
     idx = 0
-    with alive_bar(len(img_files)) as bar:
-        for img_name in img_files:
+    with alive_bar(len(file_names)) as bar:
+        for label_idx in range(len(file_names)):
+            img_name = file_names[label_idx]
             if not(os.path.isfile(os.path.join(target_dir, os.path.splitext(img_name)[0] + ".png"))):
-                img = load_image(os.path.join(data_dir, img_name), grey_scale = True)
-                faces = detector.detectMultiScale(img)
-                best_n_landmarks = 0
-                (best_x, best_y, best_w, best_h) = (0,0,0,0)
-                for face in faces:
-                    (x, y, w, h) = face
-                    n_landmark_points = landmark_inbox(x,y,w,h, landmarks[idx])
-                    if (best_n_landmarks < n_landmark_points):
-                        best_n_landmarks = n_landmark_points
-                        (best_x, best_y, best_w, best_h) = (x, y, w, h)
-
-                crop_img = img[best_y:best_y+best_h, best_x:best_x+best_w]
-                crop_img = cv2.resize(crop_img, (target_H,target_W))
-                face_filename = os.path.join(target_dir, os.path.splitext(img_name)[0] + ".png")
-                cv2.imwrite(face_filename, crop_img)
+                if (os.path.isfile(img_name)):
+                    img = load_image(os.path.join(data_dir, img_name), grey_scale = True)
+                    faces = detector.detectMultiScale(img)
+                    best_n_landmarks = 0
+                    (best_x, best_y, best_w, best_h) = (-1,-1,-1,-1)
+                    for face in faces:
+                        (x, y, w, h) = face
+                        n_landmark_points = landmark_inbox(x,y,w,h, landmarks[idx])
+                        if (best_n_landmarks < n_landmark_points):
+                            best_n_landmarks = n_landmark_points
+                            (best_x, best_y, best_w, best_h) = (x, y, w, h)
+                    if ((best_x, best_y, best_w, best_h) != (-1,-1,-1,-1)):
+                        crop_img = img[best_y:best_y+best_h, best_x:best_x+best_w]
+                        crop_img = cv2.resize(crop_img, (target_H,target_W))
+                        face_filename = os.path.join(target_dir, os.path.splitext(img_name)[0] + ".png")
+                        cv2.imwrite(face_filename, crop_img)
             idx += 1
             bar()
     print("Done!")
