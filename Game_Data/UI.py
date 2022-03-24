@@ -1,3 +1,4 @@
+import os
 from re import S
 import pygame
 import numpy as np
@@ -12,34 +13,30 @@ class Game_Object:
         pass
 
 class Bubble_Object(Game_Object):
-    def __init__(self, x, y, r, w = 0, color = (255,255,255), opacity=1):
+    def __init__(self, img_path, x, y, size, opacity=1):
         super().__init__(x, y, opacity)
-        self.color = color
-        self.r = r
-        self.w = w
+        self.ico = pygame.image.load(img_path)
+        self.size = (size,size)
         self.velocity = np.array((0,-1))
         self.time = 0
         self.on_screen = True
 
+    def reset(self, img_path, x, y):
+        self.ico = self.ico = pygame.image.load(img_path)
+        self.x, self.y = x, y
+        self.on_screen = True
+        
+        return
     def update(self):
         self.x += self.velocity[0]
         self.y += self.velocity[1]
 
-        if (self.y+self.r<0):
+        if (self.y<-10):
             self.on_screen = False
 
     def draw(self, screen):
-        pygame.draw.circle(screen, self.color, (int(self.x), int(self.y)), self.r, self.w)
+        screen.blit(self.ico, (self.x, self.y))
 
-class Animated_Background(Game_Object):
-    def __init__(self, x, y, height, width, opacity = 1.0):
-        super().__init__(x, y, height, width, opacity)
-
-    def update(self):
-        return
-
-    def draw(self):
-        return
 
 class Text_Object(Game_Object):
     def __init__(self, x, y, size, text, opacity = 100, font = 'Default'):
@@ -76,12 +73,34 @@ class Button(Game_Object):
     def update(self):
         return
 
+class Animated_Background(Game_Object):
+    def __init__(self, screen):
+        self.screen = screen
+        self.bubble_list = []
+        self.emojis_files = [f for f in os.listdir("Game_Data/emojis") if os.path.isfile(os.path.join("Game_Data/emojis", f)) and (os.path.splitext(f)[1] == '.png')]
+        for i in range(20):
+            size = np.random.randint(5,20)
+            img_path = os.path.join("Game_Data/emojis", np.random.choice(self.emojis_files))
+            bubble = Bubble_Object(img_path, x = np.random.randint(0,self.screen.get_rect()[2]), y = np.random.randint(0,self.screen.get_rect()[3]), size = size)
+            self.bubble_list.append(bubble)
+
+    def draw(self):
+        for bubble_idx in range(len(self.bubble_list)):
+            if self.bubble_list[bubble_idx].on_screen == False:
+                img_path = os.path.join("Game_Data/emojis", np.random.choice(self.emojis_files))
+                self.bubble_list[bubble_idx].reset(img_path, x = np.random.randint(0,self.screen.get_rect()[2]), y = np.random.randint(self.screen.get_rect()[3],self.screen.get_rect()[3] + 100))
+            self.bubble_list[bubble_idx].update()
+            self.bubble_list[bubble_idx].draw(screen = self.screen)
+        return
+
 class Main_Menu():
     def __init__(self):
         self.buttons = []
         self.bgms = []
 
+        
         return
 
-    def update(self):
+    def draw(self):
+        
         return
