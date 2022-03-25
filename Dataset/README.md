@@ -18,6 +18,10 @@ python ./extractor.py -src [path of source] -dst [path of destination] -H [targe
 ```bash
 python ./packer.py -src [path of source] -dst [path of destination]
 ```
+- To unpack facial images from h5 file
+```bash
+python ./unpacker.py -src [path of h5 file] -dst [path of destination]
+```
 ## Citing
 * J. Kossaifi, G. Tzimiropoulos, S. Todorovic and M. Pantic. AFEW-VA for valence and arousal estimation In-The-Wild. Image and Vision Computing, 2016 (submitted).
 *  Abhinav Dhall, Roland Goecke, Simon Lucey, and Tom Gedeon. Static Facial Expressions in Tough Conditions: Data, Evaluation Protocol And Benchmark, First IEEE International Workshop on Benchmarking Facial Image Analysis Technologies BeFIT, IEEE International Conference on Computer Vision ICCV2011, Barcelona, Spain, 6-13 November 2011
