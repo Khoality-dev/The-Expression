@@ -6,19 +6,17 @@ from Game_Data.UI import *
 
 def setup():
     pygame.init()
-    screen = pygame.display.set_mode((800, 600))
+    screen = pygame.display.set_mode()
 
     clock = pygame.time.Clock()
     
     return screen, clock
 
-def draw(screen, clock, FPS, bubble_list):
-    screen.blit(background, (0,0))
-    for bubble_idx in range(len(bubble_list)):
-        if bubble_list[bubble_idx].on_screen == False:
-            bubble_list[bubble_idx] = Bubble_Object(x = np.random.randint(0,800), y = np.random.randint(600,1200), r = np.random.randint(5,20), color=(10,240,240))
-        bubble_list[bubble_idx].update()
-        bubble_list[bubble_idx].draw(screen = screen)
+def draw(background, logo, screen, clock, FPS):
+    screen.fill((210,210,210))
+    background.draw()
+    screen.blit(logo, (int(screen.get_rect()[2]/3.5),0))
+    
     text.update()
     text.draw(screen)
     clock.tick(FPS)
@@ -33,18 +31,16 @@ if __name__ == "__main__":
 
     screen, clock = setup()
     clock.tick(FPS)
-    text = Text_Object(x = 350, y = 400, size = 32, text = "Play", font = 'freesansbold.ttf')
-    background = pygame.image.load('Game_Data/background/blue.png')
-    bubble_list = []
-    for i in range(100):
-        bubble = Bubble_Object(x = np.random.randint(0,800), y = np.random.randint(0,600), r = np.random.randint(5,20), color=(10,240,240))
-        bubble_list.append(bubble)
+    text = Text_Object(x = int(screen.get_rect()[2]/2.15), y = (screen.get_rect()[3] * 3)//4, size = 56, text = "Play", font = 'freesansbold.ttf')
+    background = Animated_Background(screen = screen)
+    logo = pygame.image.load("Game_Data/image/The Expression-logos_transparent.png")
+    logo = pygame.transform.scale(logo, (800,800))
 
     while (not(exit)):
         for event in pygame.event.get():
             if (event.type == pygame.QUIT):
                 exit = True
-        draw(screen, clock, FPS, bubble_list)
+        draw(background, logo, screen, clock, FPS)
 
     pygame.quit()
     quit
