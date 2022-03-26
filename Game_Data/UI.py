@@ -1,5 +1,6 @@
 import os
 from re import S
+from typing import Text
 import pygame
 import numpy as np
 
@@ -39,7 +40,7 @@ class Bubble_Object(Game_Object):
 
 
 class Text_Object(Game_Object):
-    def __init__(self, x, y, size, text, opacity = 100, font = 'Default'):
+    def __init__(self, x, y, text, size = 56, opacity = 100, font = 'Default'):
         super().__init__(x, y, opacity)
         self.font = font
         self.font = pygame.font.Font(font, size)
@@ -53,9 +54,11 @@ class Text_Object(Game_Object):
 
 class Button(Game_Object):
     def __init__(self, x, y, height, width, title = None, opacity = 1.0, state = 0):
-        super().__init__(self, x, y, title, opacity)
+        super().__init__(x, y, opacity)
         self.height = height
         self.width = width
+        self.color = (255,255,255)
+        self.text = Text_Object(x,y, text = title, font = 'freesansbold.ttf')
         self.state = state
         self.icons = []
         self.sounds = []
@@ -71,6 +74,12 @@ class Button(Game_Object):
         return
 
     def update(self):
+        self.text.update()
+        return
+    
+    def draw(self, screen):
+        pygame.draw.rect(screen, self.color,(self.x, self.y, self.width, self.height))
+        self.text.draw(screen)
         return
 
 class Animated_Background(Game_Object):
@@ -94,13 +103,16 @@ class Animated_Background(Game_Object):
         return
 
 class Main_Menu():
-    def __init__(self):
-        self.buttons = []
+    def __init__(self, screen):
+        self.screen = screen
+        self.buttons = [Button(x = int(screen.get_rect()[2]/2.15), y = int(screen.get_rect()[3] * 3//4), height = 60, width = 120, title = "Play")]
         self.bgms = []
-
-        
+        self.logo = pygame.image.load("Game_Data/image/The Expression-logos_transparent.png")
+        self.logo = pygame.transform.scale(self.logo, (800,800))
         return
 
-    def draw(self):
-        
+    def draw(self, screen):
+        self.screen.blit(self.logo, (int(self.screen.get_rect()[2]/3.5),0))
+        for button in self.buttons:
+            button.draw(screen)
         return
