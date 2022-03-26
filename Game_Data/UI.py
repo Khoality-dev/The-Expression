@@ -1,6 +1,4 @@
 import os
-from re import S
-from typing import Text
 import pygame
 import numpy as np
 
