@@ -18,7 +18,7 @@ python train.py
 ```
 - To play
 ```bash
-python game.py or execute game.exe
+python the-expression.py
 ```
 
 

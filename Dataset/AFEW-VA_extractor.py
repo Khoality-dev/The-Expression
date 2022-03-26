@@ -42,7 +42,7 @@ def extractor(args):
         for label_idx in range(len(file_names)):
             img_name = file_names[label_idx]
             if not(os.path.isfile(os.path.join(target_dir, os.path.splitext(img_name)[0] + ".png"))):
-                if (os.path.isfile(img_name)):
+                if (os.path.isfile(os.path.join(data_dir,img_name))):
                     img = load_image(os.path.join(data_dir, img_name), grey_scale = True)
                     faces = detector.detectMultiScale(img)
                     best_n_landmarks = 0
@@ -66,8 +66,8 @@ def extractor(args):
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument('-src', dest = 'src', default = "src_data")
-    parser.add_argument('-H', dest = 'height', default = 256)
-    parser.add_argument('-W', dest = 'width', default = 256)
+    parser.add_argument('-H', dest = 'height', default = 64)
+    parser.add_argument('-W', dest = 'width', default = 64)
     parser.add_argument('-dst', dest = 'dst', default = "facial_data")
     parser.add_argument('-dmodel', dest = 'detector_model', default = "utils/haarcascade_frontalface_alt2.xml")
     args = parser.parse_args()
