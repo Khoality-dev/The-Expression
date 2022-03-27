@@ -91,7 +91,7 @@ class Button(Game_Object):
 class Animated_Background(Game_Object):
     def __init__(self, screen):
         self.screen = screen
-        self.bubble_list = []
+        self.bubble_list = [] 
         self.emojis_files = [f for f in os.listdir("Game_Data/emojis") if os.path.isfile(os.path.join("Game_Data/emojis", f)) and (os.path.splitext(f)[1] == '.png')]
         for i in range(20):
             size = np.random.randint(5,20)
@@ -100,6 +100,7 @@ class Animated_Background(Game_Object):
             self.bubble_list.append(bubble)
 
     def draw(self):
+        self.screen.fill((210,210,210))
         for bubble_idx in range(len(self.bubble_list)):
             if self.bubble_list[bubble_idx].on_screen == False:
                 img_path = os.path.join("Game_Data/emojis", np.random.choice(self.emojis_files))
