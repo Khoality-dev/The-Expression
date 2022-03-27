@@ -42,13 +42,16 @@ class Text_Object(Game_Object):
         super().__init__(x, y, opacity)
         self.font = font
         self.font = pygame.font.Font(font, size)
-        self.text = pygame.font.Font.render(self.font, text, True, (0,0,0))
+        self.color = (0,0,0)
+        self.text = text
+        self.rendered = pygame.font.Font.render(self.font, self.text, True, self.color)
         self.size = size
     def update(self):
+        self.rendered = pygame.font.Font.render(self.font, self.text, True, self.color)
         return
 
     def draw(self, screen):
-        screen.blit(self.text, (self.x, self.y))
+        screen.blit(self.rendered, (self.x, self.y))
 
 class Button(Game_Object):
     def __init__(self, x, y, height, width, title = None, opacity = 1.0, state = 0):
@@ -62,16 +65,21 @@ class Button(Game_Object):
         self.sounds = []
         return
 
-    def mouse_hover(self):
-        return
-
-    def mouse_on_click(self):
-        return
-
-    def mouse_on_release(self):
-        return
-
     def update(self):
+        mouse_posx, mouse_posy = pygame.mouse.get_pos()
+        global exit
+        if (self.x <= mouse_posx and mouse_posx <= self.x + self.width and self.y <= mouse_posy and mouse_posy <= self.y + self.height):
+            self.state = 1
+        else:
+            self.state = 0
+
+        if self.state == 0:
+            self.text.color = (0,0,0)
+            self.color = (255,255,255)
+        elif self.state == 1:
+            self.text.color = (255,255,255)
+            self.color = (0,0,0)
+
         self.text.update()
         return
     
@@ -103,10 +111,18 @@ class Animated_Background(Game_Object):
 class Main_Menu():
     def __init__(self, screen):
         self.screen = screen
-        self.buttons = [Button(x = int(screen.get_rect()[2]/2.15), y = int(screen.get_rect()[3] * 3//4), height = 60, width = 120, title = "Play")]
+        play_x = int(screen.get_rect()[2]/2.15)
+        play_y = int(screen.get_rect()[3] * 3//4)
+        self.buttons = [Button(x = play_x, y = play_y, height = 60, width = 120, title = "Play"),
+                        Button(x = play_x, y = play_y + 100, height = 60, width = 120, title = "Exit")]
         self.bgms = []
         self.logo = pygame.image.load("Game_Data/image/The Expression-logos_transparent.png")
         self.logo = pygame.transform.scale(self.logo, (800,800))
+        return
+    
+    def update(self):
+        for button in self.buttons:
+            button.update()
         return
 
     def draw(self, screen):
@@ -114,3 +130,7 @@ class Main_Menu():
         for button in self.buttons:
             button.draw(screen)
         return
+
+class Game_Scene():
+    def __init__(self, screen):
+        self.screen = screen

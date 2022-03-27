@@ -1,3 +1,4 @@
+from tkinter import Menu
 import pygame
 import numpy as np
 import argparse
@@ -16,6 +17,7 @@ def draw(background, screen, clock, FPS):
     screen.fill((210,210,210))
     background.draw()
     
+    menu.update()
     menu.draw(screen)
     
     clock.tick(FPS)
@@ -30,13 +32,12 @@ if __name__ == "__main__":
 
     screen, clock = setup()
     clock.tick(FPS)
-    text = Text_Object(x = int(screen.get_rect()[2]/2.15), y = (screen.get_rect()[3] * 3)//4, size = 56, text = "Play", font = 'freesansbold.ttf')
     background = Animated_Background(screen = screen)
     menu = Main_Menu(screen)
 
     while (not(exit)):
         for event in pygame.event.get():
-            if (event.type == pygame.QUIT):
+            if event.type == pygame.QUIT or (event.type == pygame.MOUSEBUTTONUP and menu.buttons[1].state == 1):
                 exit = True
         draw(background, screen, clock, FPS)
 
