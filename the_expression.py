@@ -18,13 +18,17 @@ def setup():
     
     return screen, camera, clock
 
-def draw(background, screen, clock, FPS):
+def draw(background, camera, screen, clock, FPS):
     background.draw()
     
     menu.update()
     menu.draw(screen)
-
-    #screen.blit(pygame.transform.flip(camera.get_image(), flip_x= True, flip_y= False), (0,0))
+    (cam_width, cam_height) = camera.get_size()
+    cam_image = pygame.transform.flip(camera.get_image(), flip_x = True, flip_y = False)
+    first_cam = pygame.transform.chop(cam_image, (cam_width/2, 0, cam_width/2,0))
+    second_cam = pygame.transform.chop(cam_image, (0, 0, cam_width/2,0))
+    screen.blit(first_cam, (30,30))
+    screen.blit(second_cam, (1000,30))
     clock.tick(FPS)
     pygame.display.update()
     return 0
@@ -46,7 +50,7 @@ if __name__ == "__main__":
                 exit = True
             if (event.type == pygame.MOUSEBUTTONUP and menu.buttons[0].state == 1):
                 menu = Game_Scene(screen)
-        draw(background, screen, clock, FPS)
+        draw(background, camera, screen, clock, FPS)
 
     pygame.quit()
     quit
