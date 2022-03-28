@@ -127,7 +127,7 @@ class Main_Menu():
     def __init__(self, screen):
         self.screen = screen
         play_x = screen.get_rect()[2]/2
-        play_y = screen.get_rect()[3]/1.2
+        play_y = screen.get_rect()[3]/1.3
         self.buttons = [Button(x = play_x, y = play_y, height = 60, width = 120, title = "Play"),
                         Button(x = play_x, y = play_y + 100, height = 60, width = 120, title = "Exit")]
         self.bgms = []
