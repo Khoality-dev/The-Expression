@@ -65,21 +65,31 @@ class Button(Game_Object):
         self.sounds = []
         return
 
+    def mouse_normal(self):
+        self.text.color = (0,0,0)
+        self.color = (255,255,255)
+        pygame.mouse.set_cursor(pygame.SYSTEM_CURSOR_ARROW)
+        return
+
+    def mouse_hover(self):
+        self.text.color = (255,255,255)
+        self.color = (0,0,0)
+        pygame.mouse.set_cursor(pygame.SYSTEM_CURSOR_HAND)
+        return
+
     def update(self):
         mouse_posx, mouse_posy = pygame.mouse.get_pos()
-        global exit
+        last_state = self.state
         if (self.x <= mouse_posx and mouse_posx <= self.x + self.width and self.y <= mouse_posy and mouse_posy <= self.y + self.height):
             self.state = 1
         else:
             self.state = 0
 
-        if self.state == 0:
-            self.text.color = (0,0,0)
-            self.color = (255,255,255)
-        elif self.state == 1:
-            self.text.color = (255,255,255)
-            self.color = (0,0,0)
-
+        if self.state != last_state:
+            if (self.state == 1):
+                self.mouse_hover()
+            elif self.state == 0:
+                self.mouse_normal()
         self.text.update()
         return
     
