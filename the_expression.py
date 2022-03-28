@@ -24,7 +24,7 @@ def draw(background, screen, clock, FPS):
     menu.update()
     menu.draw(screen)
 
-    screen.blit(pygame.transform.flip(camera.get_image(), flip_x= True, flip_y= False), (0,0))
+    #screen.blit(pygame.transform.flip(camera.get_image(), flip_x= True, flip_y= False), (0,0))
     clock.tick(FPS)
     pygame.display.update()
     return 0

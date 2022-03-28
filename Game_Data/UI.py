@@ -45,21 +45,25 @@ class Text_Object(Game_Object):
         self.color = (0,0,0)
         self.text = text
         self.rendered = pygame.font.Font.render(self.font, self.text, True, self.color)
+        self.height = self.rendered.get_height()
+        self.width = self.rendered.get_width()
         self.size = size
     def update(self):
         self.rendered = pygame.font.Font.render(self.font, self.text, True, self.color)
         return
 
     def draw(self, screen):
-        screen.blit(self.rendered, (self.x, self.y))
+        screen.blit(self.rendered, (self.x - (self.width/2), self.y- (self.height/2)))
 
 class Button(Game_Object):
     def __init__(self, x, y, height, width, title = None, opacity = 1.0, state = 0):
         super().__init__(x, y, opacity)
         self.height = height
         self.width = width
+        self.x -= self.width/2
+        self.y -= self.height/2
         self.color = (255,255,255)
-        self.text = Text_Object(x,y, text = title, font = 'freesansbold.ttf')
+        self.text = Text_Object(self.x + width/2, self.y + height/2, text = title, font = 'freesansbold.ttf')
         self.state = state
         self.icons = []
         self.sounds = []
@@ -122,13 +126,13 @@ class Animated_Background(Game_Object):
 class Main_Menu():
     def __init__(self, screen):
         self.screen = screen
-        play_x = int(screen.get_rect()[2]/2.15)
-        play_y = int(screen.get_rect()[3] * 3//4)
+        play_x = screen.get_rect()[2]/2
+        play_y = screen.get_rect()[3]/1.2
         self.buttons = [Button(x = play_x, y = play_y, height = 60, width = 120, title = "Play"),
                         Button(x = play_x, y = play_y + 100, height = 60, width = 120, title = "Exit")]
         self.bgms = []
-        self.logo = pygame.image.load("Game_Data/image/The Expression-logos_transparent.png")
-        self.logo = pygame.transform.scale(self.logo, (800,800))
+        self.logo = pygame.image.load("Game_Data/image/The Expression-logo.png")
+        self.logo = pygame.transform.scale(self.logo, (screen.get_rect()[2]/3.85,screen.get_rect()[3]/2.5))
         return
     
     def update(self):
@@ -137,7 +141,7 @@ class Main_Menu():
         return
 
     def draw(self, screen):
-        self.screen.blit(self.logo, (int(self.screen.get_rect()[2]/3.5),0))
+        self.screen.blit(self.logo, ((self.screen.get_rect()[2]/2)-(self.logo.get_rect()[2]/2),self.screen.get_rect()[3]/2.5 - (self.logo.get_rect()[3]/2)))
         for button in self.buttons:
             button.draw(screen)
         return
