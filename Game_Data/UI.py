@@ -149,7 +149,6 @@ class Main_Menu():
 class Game_Scene():
     def __init__(self, screen):
         self.screen = screen
-        print("hello")
 
     def update(self):
         return

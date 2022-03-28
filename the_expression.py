@@ -44,12 +44,15 @@ if __name__ == "__main__":
     clock.tick(FPS)
     background = Animated_Background(screen = screen)
     menu = Main_Menu(screen)
+    current_menu = 0
     while (not(exit)):
         for event in pygame.event.get():
             if event.type == pygame.QUIT or (event.type == pygame.MOUSEBUTTONUP and menu.buttons[1].state == 1):
                 exit = True
-            if (event.type == pygame.MOUSEBUTTONUP and menu.buttons[0].state == 1):
-                menu = Game_Scene(screen)
+            if (current_menu == 0):
+                if (event.type == pygame.MOUSEBUTTONUP and menu.buttons[0].state == 1):
+                    current_menu = 1
+                    menu = Game_Scene(screen)
         draw(background, camera, screen, clock, FPS)
 
     pygame.quit()
