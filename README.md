@@ -1,8 +1,9 @@
 # The Expression - CMPT 419 Project
 An Emotional Game for Social Expression Learning
 
-## Requirements: 
-Python 3.7.8
+## Supported OS: 
+###Python Version 3.7.8
+Windows 10, Linux (Not tested), MAC OS (Not tested)
 
 ## How to Use:
 - Setup a virtual environment
@@ -21,5 +22,3 @@ python train.py
 ```bash
 python the-expression.py
 ```
-
-
