@@ -81,6 +81,9 @@ class Button(Game_Object):
         pygame.mouse.set_cursor(pygame.SYSTEM_CURSOR_HAND)
         return
 
+    def on_hover(self):
+        return self.state==1
+
     def update(self):
         mouse_posx, mouse_posy = pygame.mouse.get_pos()
         last_state = self.state
@@ -101,6 +104,41 @@ class Button(Game_Object):
         pygame.draw.rect(screen, self.color,(self.x, self.y, self.width, self.height))
         self.text.draw(screen)
         return
+
+class Camera():
+    def __init__(self, pygame_camera, flip_x, flip_y, rotating_state):
+        self.camera = pygame_camera
+        self.flip_x = flip_x
+        self.flip_y = flip_y
+        self.rotating_state = rotating_state
+
+    def rotate(self):
+        self.rotating_state = (self.rotating_state + 1) % 4
+        return
+
+    def flip_on_x(self):
+        self.flip_x = not self.flip_x
+        return
+    
+    def flip_on_y(self):
+        self.flip_y = not self.flip_y
+        return
+
+    def get_output_transform(self):
+        cam_image = pygame.transform.rotate(self.camera.get_image(), angle = (self.rotating_state)*90)
+        cam_image = pygame.transform.flip(cam_image, flip_x = self.flip_x, flip_y = self.flip_y)
+        (cam_width, cam_height) = cam_image.get_rect()[2], cam_image.get_rect()[3]
+        first_cam = pygame.transform.chop(cam_image, (cam_width/2, 0, cam_width/2,0))
+        second_cam = pygame.transform.chop(cam_image, (0, 0, cam_width/2,0))
+        return first_cam, second_cam
+
+    def draw(self, screen):
+        first_cam, second_cam = self.get_output_transform()
+        cropped_cam_size = (first_cam.get_width(), first_cam.get_height())
+        screen_size = (screen.get_rect()[2],screen.get_rect()[3])
+        screen_center = (screen.get_rect()[2]/2,screen.get_rect()[3]/2)
+        screen.blit(first_cam, ((screen_center[0]/2) - cropped_cam_size[0]/2,screen_center[1] - cropped_cam_size[1]/2))
+        screen.blit(second_cam, ((screen_center[0] + screen_center[0]/2) - cropped_cam_size[0]/2,screen_center[1] - cropped_cam_size[1]/2))
 
 class Animated_Background(Game_Object):
     def __init__(self, screen):
@@ -126,10 +164,10 @@ class Animated_Background(Game_Object):
 class Main_Menu():
     def __init__(self, screen):
         self.screen = screen
-        play_x = screen.get_rect()[2]/2
-        play_y = screen.get_rect()[3]/1.3
-        self.buttons = [Button(x = play_x, y = play_y, height = 60, width = 120, title = "Play"),
-                        Button(x = play_x, y = play_y + 100, height = 60, width = 120, title = "Exit")]
+        center_x, center_y = screen.get_rect()[2]/2, screen.get_rect()[3]/2
+        self.buttons = [Button(x = center_x, y = center_y + 100, height = 60, width = 120, title = "Play"),
+                        Button(x = center_x, y = center_y + 200, height = 60, width = 120, title = "Camera Setting"),
+                        Button(x = center_x, y = center_y + 300, height = 60, width = 120, title = "Exit")]
         self.bgms = []
         self.logo = pygame.image.load("Game_Data/image/The Expression-logo.png")
         self.logo = pygame.transform.scale(self.logo, (screen.get_rect()[2]/3.85,screen.get_rect()[3]/2.5))
@@ -146,7 +184,33 @@ class Main_Menu():
             button.draw(screen)
         return
 
-class Game_Scene():
+
+class Camera_Menu():
+    def __init__(self, camera, screen):
+        self.screen = screen
+        self.camera = camera
+        center_x, center_y = screen.get_rect()[2]/2, screen.get_rect()[3]/2
+        self.buttons = [Button(x = center_x, y = center_y - 200, height = 60, width = 120, title = "Rotate"),
+                        Button(x = center_x, y = center_y - 100, height = 60, width = 120, title = "Flip x axis"),
+                        Button(x = center_x, y = center_y, height = 60, width = 120, title = "Flip y axis"),
+                        Button(x = center_x, y = center_y + 200, height = 60, width = 120, title = "<< Back")]
+        self.bgms = []
+        return
+    
+    
+    def update(self):
+        for button in self.buttons:
+            button.update()
+        return
+
+    def draw(self, screen):
+        for button in self.buttons:
+            button.draw(screen)
+
+        self.camera.draw(screen)
+        return
+
+class Play_Menu():
     def __init__(self, screen):
         self.screen = screen
 

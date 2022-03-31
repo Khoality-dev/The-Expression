@@ -5,37 +5,54 @@ import argparse
 
 from Game_Data.UI import *
 
+def camera_setup():
+    pygame.camera.init()
+    list_pycam = pygame.camera.list_cameras()
+    for camera_idx in range(len(list_pycam)):
+        print(camera_idx,".",list_pycam[camera_idx])
+    if (len(list_pycam) == 0):
+        print("ERROR: No camera detected!")
+        return False
+    while (True):
+        pycamera = input("Enter camera number: ")
+        if int(pycamera) >= len(list_pycam) or int(pycamera) < 0:
+            print("ERROR: Camera is not available!")
+        else:
+            break
+    pycamera = pygame.camera.Camera(list_pycam[int(pycamera)])
+    print(pycamera.get_size())
+    pycamera.start()
+    
+    camera = Camera(pycamera, flip_x = False, flip_y = False, rotating_state = 0)
+    return camera
+
 def setup():
     pygame.init()
     pygame.camera.init()
     screen = pygame.display.set_mode()
-    print(pygame.camera.list_cameras())
-    cam_device = pygame.camera.list_cameras()[0]
-    camera = pygame.camera.Camera(cam_device)
-    print(camera.get_size())
-    camera.start()
+    
+    
     clock = pygame.time.Clock()
     
-    return screen, camera, clock
+    return screen, clock
 
-def draw(background, camera, screen, clock, FPS):
+def draw(background, screen, clock, FPS):
     background.draw()
     
     menu.update()
     menu.draw(screen)
-    (cam_width, cam_height) = camera.get_size()
-    cam_image = pygame.transform.flip(camera.get_image(), flip_x = True, flip_y = False)
-    first_cam = pygame.transform.chop(cam_image, (cam_width/2, 0, cam_width/2,0))
-    second_cam = pygame.transform.chop(cam_image, (0, 0, cam_width/2,0))
-    screen.blit(first_cam, (30,30))
-    screen.blit(second_cam, (1000,30))
+    
+    
     clock.tick(FPS)
     pygame.display.update()
     return 0
 
 
+
 if __name__ == "__main__":
-    screen, camera, clock = setup()
+
+    camera = camera_setup()
+    screen, clock = setup()
 
     exit = False
     FPS = 60
@@ -47,13 +64,30 @@ if __name__ == "__main__":
     current_menu = 0
     while (not(exit)):
         for event in pygame.event.get():
-            if event.type == pygame.QUIT or (event.type == pygame.MOUSEBUTTONUP and menu.buttons[1].state == 1):
+            if event.type == pygame.QUIT:
                 exit = True
             if (current_menu == 0):
-                if (event.type == pygame.MOUSEBUTTONUP and menu.buttons[0].state == 1):
+                if (event.type == pygame.MOUSEBUTTONUP and menu.buttons[0].on_hover()):
                     current_menu = 1
-                    menu = Game_Scene(screen)
-        draw(background, camera, screen, clock, FPS)
+                    menu = Play_Menu(screen)
+                if (event.type == pygame.MOUSEBUTTONUP and menu.buttons[1].on_hover()):
+                    current_menu = 2
+                    menu = Camera_Menu(camera, screen)
+                if (event.type == pygame.MOUSEBUTTONUP and menu.buttons[2].on_hover()):
+                    exit = True
+
+            if (current_menu == 2):
+                if (event.type == pygame.MOUSEBUTTONUP and menu.buttons[0].on_hover()):
+                    camera.rotate()
+                if (event.type == pygame.MOUSEBUTTONUP and menu.buttons[1].on_hover()):
+                    camera.flip_on_x()
+                if (event.type == pygame.MOUSEBUTTONUP and menu.buttons[2].on_hover()):
+                    camera.flip_on_y()
+                if (event.type == pygame.MOUSEBUTTONUP and menu.buttons[3].on_hover()):
+                    current_menu = 0
+                    menu = Main_Menu(screen)
+            
+        draw(background, screen, clock, FPS)
 
     pygame.quit()
     quit
