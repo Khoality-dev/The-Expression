@@ -135,7 +135,6 @@ class Camera():
     def draw(self, screen):
         first_cam, second_cam = self.get_output_transform()
         cropped_cam_size = (first_cam.get_width(), first_cam.get_height())
-        screen_size = (screen.get_rect()[2],screen.get_rect()[3])
         screen_center = (screen.get_rect()[2]/2,screen.get_rect()[3]/2)
         screen.blit(first_cam, ((screen_center[0]/2) - cropped_cam_size[0]/2,screen_center[1] - cropped_cam_size[1]/2))
         screen.blit(second_cam, ((screen_center[0] + screen_center[0]/2) - cropped_cam_size[0]/2,screen_center[1] - cropped_cam_size[1]/2))
@@ -211,11 +210,19 @@ class Camera_Menu():
         return
 
 class Play_Menu():
-    def __init__(self, screen):
+    def __init__(self, camera, screen):
         self.screen = screen
+        self.camera = camera
+        
+        center_x, center_y = screen.get_rect()[2]/2, screen.get_rect()[3]/2
+        self.buttons = []
+        
+        self.bgms = []
 
     def update(self):
         return
 
     def draw(self, screen):
+
+        self.camera.draw(screen)
         return
