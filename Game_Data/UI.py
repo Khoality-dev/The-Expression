@@ -1,6 +1,10 @@
 import os
+import cv2
+from cv2 import ROTATE_90_CLOCKWISE
 import pygame
 import numpy as np
+
+from Model.models import Face_Detector
 
 class Game_Object:
     def __init__(self, x, y, opacity = 100):
@@ -111,6 +115,10 @@ class Camera():
         self.flip_x = flip_x
         self.flip_y = flip_y
         self.rotating_state = rotating_state
+        self.detector = Face_Detector()
+
+        self.face_icon = pygame.transform.scale(pygame.image.load('Game_Data/image/face_icon.png'), (32,32))
+        self.not_face_icon = pygame.transform.scale(pygame.image.load('Game_Data/image/not_face_icon.png'), (32,32))
 
     def rotate(self):
         self.rotating_state = (self.rotating_state + 1) % 4
@@ -136,8 +144,24 @@ class Camera():
         first_cam, second_cam = self.get_output_transform()
         cropped_cam_size = (first_cam.get_width(), first_cam.get_height())
         screen_center = (screen.get_rect()[2]/2,screen.get_rect()[3]/2)
-        screen.blit(first_cam, ((screen_center[0]/2) - cropped_cam_size[0]/2,screen_center[1] - cropped_cam_size[1]/2))
-        screen.blit(second_cam, ((screen_center[0] + screen_center[0]/2) - cropped_cam_size[0]/2,screen_center[1] - cropped_cam_size[1]/2))
+        portrait_1_loc = (screen_center[0]/2 - cropped_cam_size[0]/2,screen_center[1] - cropped_cam_size[1]/2)
+        portrait_2_loc = ((screen_center[0] + screen_center[0]/2) - cropped_cam_size[0]/2,screen_center[1] - cropped_cam_size[1]/2)
+        screen.blit(first_cam, portrait_1_loc)
+        screen.blit(second_cam, portrait_2_loc)
+
+        img_1 = cv2.rotate(cv2.cvtColor(pygame.surfarray.array3d(first_cam), cv2.COLOR_RGB2GRAY), ROTATE_90_CLOCKWISE)
+        prediction_1 = self.detector.predict(np.array(img_1))
+        if (prediction_1 == None):
+            screen.blit(self.not_face_icon, (portrait_1_loc[0], portrait_1_loc[1] - self.face_icon.get_size()[1]))
+        else:
+            screen.blit(self.face_icon, (portrait_1_loc[0], portrait_1_loc[1] - self.not_face_icon.get_size()[1]))
+        img_2 = cv2.rotate(cv2.cvtColor(pygame.surfarray.array3d(second_cam), cv2.COLOR_RGB2GRAY), ROTATE_90_CLOCKWISE)
+        prediction_2 = self.detector.predict(img_2)
+        if (prediction_2 == None):
+            screen.blit(self.not_face_icon, (portrait_2_loc[0], portrait_2_loc[1] - self.face_icon.get_size()[1]))
+        else:
+            screen.blit(self.face_icon, (portrait_2_loc[0], portrait_2_loc[1] - self.not_face_icon.get_size()[1]))
+            
 
 class Animated_Background(Game_Object):
     def __init__(self, screen):
@@ -150,7 +174,7 @@ class Animated_Background(Game_Object):
             bubble = Bubble_Object(img_path, x = np.random.randint(0,self.screen.get_rect()[2]), y = np.random.randint(0,self.screen.get_rect()[3]), size = size)
             self.bubble_list.append(bubble)
 
-    def draw(self):
+    def draw(self, screen):
         self.screen.fill((210,210,210))
         for bubble_idx in range(len(self.bubble_list)):
             if self.bubble_list[bubble_idx].on_screen == False:
@@ -216,7 +240,7 @@ class Play_Menu():
         
         center_x, center_y = screen.get_rect()[2]/2, screen.get_rect()[3]/2
         self.buttons = []
-        
+
         self.bgms = []
 
     def update(self):

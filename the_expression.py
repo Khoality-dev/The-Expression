@@ -5,6 +5,7 @@ import argparse
 import os
 
 from Game_Data.UI import *
+from Model.models import AV_Estimator, Face_Detector, Facial_Landmark_Detector
 
 def camera_setup():
     pygame.camera.init()
@@ -33,7 +34,7 @@ def camera_setup():
 
 def setup():
     pygame.init()
-    pygame.camera.init()
+    pygame.display.init()
     screen = pygame.display.set_mode()
     
     
@@ -41,31 +42,37 @@ def setup():
     
     return screen, clock
 
-def draw(background, screen, clock, FPS):
-    background.draw()
-    
+
+camera = camera_setup()
+screen, clock = setup()
+background = Animated_Background(screen = screen)
+menu = Main_Menu(screen)
+
+
+#FLD = Facial_Landmark_Detector()
+
+#AV = AV_Estimator()
+#AV.load_weights("Model/trained_model.h5")
+
+
+def update():
     menu.update()
+
+def draw():
+    background.draw(screen)
+    
     menu.draw(screen)
     
-    
-    clock.tick(FPS)
     pygame.display.update()
     return 0
 
 
-
 if __name__ == "__main__":
-
-    camera = camera_setup()
-    screen, clock = setup()
 
     exit = False
     FPS = 60
 
     
-    clock.tick(FPS)
-    background = Animated_Background(screen = screen)
-    menu = Main_Menu(screen)
     current_menu = 0
     while (not(exit)):
         for event in pygame.event.get():
@@ -80,10 +87,6 @@ if __name__ == "__main__":
                     menu = Camera_Menu(camera, screen)
                 elif (event.type == pygame.MOUSEBUTTONUP and menu.buttons[2].on_hover()):
                     exit = True
-
-            elif (current_menu == 1):
-                continue
-
             elif (current_menu == 2):
                 if (event.type == pygame.MOUSEBUTTONUP and menu.buttons[0].on_hover()):
                     camera.rotate()
@@ -94,8 +97,10 @@ if __name__ == "__main__":
                 elif (event.type == pygame.MOUSEBUTTONUP and menu.buttons[3].on_hover()):
                     current_menu = 0
                     menu = Main_Menu(screen)
-            
-        draw(background, screen, clock, FPS)
+        
+        update()
+        draw()
+        clock.tick(FPS)
 
     pygame.quit()
     quit
