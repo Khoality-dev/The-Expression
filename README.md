@@ -1,6 +1,9 @@
 # The Expression - CMPT 419 Project
 An Emotional Game for Social Expression Learning
 
+## Requirements
+- A webcam
+
 ## How to Use
 - Setup a virtual environment
 ```bash
