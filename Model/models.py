@@ -28,11 +28,15 @@ class Face_Detector():
 
 class Facial_Landmark_Detector():
     def __init__(self):
-        self.detector = dlib.shape_predictor('../Dataset/utils/shape_predictor_68_face_landmarks.dat')
+        self.detector = dlib.shape_predictor('Dataset/utils/shape_predictor_68_face_landmarks.dat')
 
     def predict(self, input_img):
-        facical_landmarks = self.detector(input_img, dlib.rectangle(0,0,len(input_img), len(input_img[0])))
-        return facical_landmarks
+        landmarks = self.detector(input_img, dlib.rectangle(0,0,len(input_img), len(input_img[0])))
+        return_ans = []
+        for i in range(68):
+            return_ans.append(landmarks.part(i).x)
+            return_ans.append(landmarks.part(i).y)
+        return return_ans
 
 class AV_Estimator():
     def __init__(self):

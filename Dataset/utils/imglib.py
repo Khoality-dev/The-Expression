@@ -24,9 +24,9 @@ def h5_load_image_all(h5_file_path):
 
 
 def load_image(data_dir, W = None, H = None, grey_scale = False):
-    flag = 1
+    flag = cv2.IMREAD_COLOR
     if (grey_scale):
-        flag = 0
+        flag = cv2.IMREAD_GRAYSCALE
 
     img_load = cv2.imread(data_dir, flag)
     if (W != None and H!= None):
@@ -46,8 +46,6 @@ def load_images(data_dir, W = None, H = None, grey_scale = False):
         if (W != None and H!= None):
             img_load = cv2.resize(img_load, (W,H))
         img_list.append(img_load)
-        if len(img_list)%500==0:
-            print(len(img_list),"/", len(img_files))
     return img_list
 
 def load_sampling(data_dir,name_files, W = None, H = None, grey_scale = False):

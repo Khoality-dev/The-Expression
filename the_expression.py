@@ -82,6 +82,7 @@ if __name__ == "__main__":
                 if (event.type == pygame.MOUSEBUTTONUP and menu.buttons[0].on_hover()):
                     current_menu = 1
                     menu = Play_Menu(camera, screen)
+                    menu.round.start()
                 elif (event.type == pygame.MOUSEBUTTONUP and menu.buttons[1].on_hover()):
                     current_menu = 2
                     menu = Camera_Menu(camera, screen)
