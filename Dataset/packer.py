@@ -23,6 +23,6 @@ def packer(args):
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument('-src', dest = 'src', default = "facial_data")
-    parser.add_argument('-des', dest = 'dst', default = "facial_data.h5")
+    parser.add_argument('-dst', dest = 'dst', default = "facial_data.h5")
     args = parser.parse_args()
     packer(args)

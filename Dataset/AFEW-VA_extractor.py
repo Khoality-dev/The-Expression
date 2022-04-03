@@ -30,7 +30,7 @@ def extractor(args):
     target_H = args.height
     target_W = args.width
 
-    landmarks = pd.read_csv("src_data/label_data.csv")
+    landmarks = pd.read_csv(os.path.join(args.src,"label_data.csv"))
 
     file_names = landmarks.iloc[:,int(landmarks.columns.get_loc('file_name'))].to_numpy()
     landmarks = landmarks.iloc[:,int(landmarks.columns.get_loc('landmark_x_0')):int(landmarks.columns.get_loc('landmark_y_67')+1)].to_numpy()

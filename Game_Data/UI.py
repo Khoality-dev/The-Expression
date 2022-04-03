@@ -1,8 +1,10 @@
 import os
+from typing import Text
 import cv2
 from cv2 import ROTATE_90_CLOCKWISE
 import pygame
 import numpy as np
+from Game_Data.Core import Match
 
 from Model.models import Face_Detector
 
@@ -42,7 +44,7 @@ class Bubble_Object(Game_Object):
 
 
 class Text_Object(Game_Object):
-    def __init__(self, x, y, text, size = 56, opacity = 100, font = 'Default'):
+    def __init__(self, x, y, text, size = 56, opacity = 100, font = 'freesansbold.ttf'):
         super().__init__(x, y, opacity)
         self.font = font
         self.font = pygame.font.Font(font, size)
@@ -52,6 +54,10 @@ class Text_Object(Game_Object):
         self.height = self.rendered.get_height()
         self.width = self.rendered.get_width()
         self.size = size
+
+    def set_text(self, text):
+        self.text = text
+
     def update(self):
         self.rendered = pygame.font.Font.render(self.font, self.text, True, self.color)
         return
@@ -67,7 +73,7 @@ class Button(Game_Object):
         self.x -= self.width/2
         self.y -= self.height/2
         self.color = (255,255,255)
-        self.text = Text_Object(self.x + width/2, self.y + height/2, text = title, font = 'freesansbold.ttf')
+        self.text = Text_Object(self.x + width/2, self.y + height/2, text = title)
         self.state = state
         self.icons = []
         self.sounds = []
@@ -239,14 +245,22 @@ class Play_Menu():
         self.camera = camera
         
         center_x, center_y = screen.get_rect()[2]/2, screen.get_rect()[3]/2
+        self.round = Match(10*1000)
+        self.timer_display = Text_Object(center_x, 50, str(round(self.round.get_countdown()/1000,2)))
+
+        self.target_image_surf = pygame.transform.rotate(pygame.surfarray.make_surface(self.round.target), -90)
         self.buttons = []
 
         self.bgms = []
 
     def update(self):
+        self.round.update()
+        self.timer_display.set_text(str(round(self.round.get_countdown()/1000,2)))
+        self.timer_display.update()
         return
 
     def draw(self, screen):
-
+        self.timer_display.draw(screen)
+        self.screen.blit(self.target_image_surf, (self.screen.get_rect()[2]/2 - self.target_image_surf.get_size()[0]/2, self.screen.get_rect()[3]/2 - self.target_image_surf.get_size()[1]/2))
         self.camera.draw(screen)
         return
