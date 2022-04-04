@@ -4,6 +4,10 @@ import pandas as pd
 import numpy as np
 import dlib
 
+target_W = 64
+target_H = 64
+target_landmarks = 136
+
 class Face_Detector():
     def __init__(self):
         self.detector = cv2.CascadeClassifier("Dataset/utils/haarcascade_frontalface_alt2.xml")
@@ -41,8 +45,8 @@ class AV_Estimator():
     def __init__(self,path):
         self.model = tf.keras.models.load_model(path)
 
-    def predict(self, x):
-        return self.model.predict(x)
+    def predict(self, x, y):
+        return self.model.predict([np.resize(x, (1,target_W,target_H)), np.resize(y,(1,target_landmarks))])
 
 class New_Game():
     def __init__(self, img_name):
