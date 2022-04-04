@@ -1,3 +1,4 @@
+from json.tool import main
 import cv2
 import tensorflow as tf
 import pandas as pd
@@ -41,8 +42,8 @@ class AV_Estimator():
     def __init__(self,path):
         self.model = tf.keras.models.load_model(path)
 
-    def predict(self, x):
-        return self.model.predict(x)
+    def predict(self, x, y):
+        return self.model.predict([np.resize(x,(1,64,64)), np.resize(y,(1,136))])
 
 class New_Game():
     def __init__(self, img_name):
@@ -85,3 +86,7 @@ class New_Game():
         if(self.best_0 > self.best_1): return 0
         elif(self.best_1 > self.best_0): return 1
         else: return -1
+
+if __name__ == "__main__":
+    av = AV_Estimator('../models/best_model.h5')
+    print(av.model.summary())
