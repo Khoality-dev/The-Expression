@@ -48,11 +48,9 @@ screen, clock = setup()
 background = Animated_Background(screen = screen)
 menu = Main_Menu(screen)
 
-
-#FLD = Facial_Landmark_Detector()
-
-#AV = AV_Estimator()
-#AV.load_weights("Model/trained_model.h5")
+FLD = Facial_Landmark_Detector()
+AV = AV_Estimator(path = "Model/best_model.h5")
+FD = Face_Detector()
 
 
 def update():
@@ -81,7 +79,7 @@ if __name__ == "__main__":
             if (current_menu == 0):
                 if (event.type == pygame.MOUSEBUTTONUP and menu.buttons[0].on_hover()):
                     current_menu = 1
-                    menu = Play_Menu(camera, screen)
+                    menu = Play_Menu(AV, FD, FLD, camera, screen)
                     menu.round.start()
                 elif (event.type == pygame.MOUSEBUTTONUP and menu.buttons[1].on_hover()):
                     current_menu = 2

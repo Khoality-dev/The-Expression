@@ -1,7 +1,6 @@
 import os
 from typing import Text
 import cv2
-from cv2 import ROTATE_90_CLOCKWISE
 import pygame
 import numpy as np
 from Game_Data.Core import Match
@@ -111,7 +110,7 @@ class Button(Game_Object):
         return
     
     def draw(self, screen):
-        pygame.draw.rect(screen, self.color,(self.x, self.y, self.width, self.height))
+        #pygame.draw.rect(screen, self.color,(self.x, self.y, self.width, self.height))
         self.text.draw(screen)
         return
 
@@ -155,15 +154,15 @@ class Camera():
         screen.blit(first_cam, portrait_1_loc)
         screen.blit(second_cam, portrait_2_loc)
 
-        img_1 = cv2.rotate(cv2.cvtColor(pygame.surfarray.array3d(first_cam), cv2.COLOR_RGB2GRAY), ROTATE_90_CLOCKWISE)
+        img_1 = cv2.rotate(cv2.cvtColor(pygame.surfarray.array3d(first_cam), cv2.COLOR_RGB2GRAY), cv2.ROTATE_90_CLOCKWISE)
         prediction_1 = self.detector.predict(np.array(img_1))
-        if (prediction_1 == None):
+        if (len(prediction_1) == 0):
             screen.blit(self.not_face_icon, (portrait_1_loc[0], portrait_1_loc[1] - self.face_icon.get_size()[1]))
         else:
             screen.blit(self.face_icon, (portrait_1_loc[0], portrait_1_loc[1] - self.not_face_icon.get_size()[1]))
-        img_2 = cv2.rotate(cv2.cvtColor(pygame.surfarray.array3d(second_cam), cv2.COLOR_RGB2GRAY), ROTATE_90_CLOCKWISE)
+        img_2 = cv2.rotate(cv2.cvtColor(pygame.surfarray.array3d(second_cam), cv2.COLOR_RGB2GRAY), cv2.ROTATE_90_CLOCKWISE)
         prediction_2 = self.detector.predict(img_2)
-        if (prediction_2 == None):
+        if (len(prediction_2) == 0):
             screen.blit(self.not_face_icon, (portrait_2_loc[0], portrait_2_loc[1] - self.face_icon.get_size()[1]))
         else:
             screen.blit(self.face_icon, (portrait_2_loc[0], portrait_2_loc[1] - self.not_face_icon.get_size()[1]))
@@ -240,27 +239,32 @@ class Camera_Menu():
         return
 
 class Play_Menu():
-    def __init__(self, camera, screen):
+    def __init__(self, AVEstimator, FDetector, FLDetector, camera, screen):
         self.screen = screen
         self.camera = camera
         
         center_x, center_y = screen.get_rect()[2]/2, screen.get_rect()[3]/2
-        self.round = Match(10*1000)
+        self.round = Match(camera, FDetector= FDetector, FLDetector= FLDetector, AVEstimator= AVEstimator, length_in_milisec = 100*1000)
         self.timer_display = Text_Object(center_x, 50, str(round(self.round.get_countdown()/1000,2)))
 
         self.target_image_surf = pygame.transform.rotate(pygame.surfarray.make_surface(self.round.target), -90)
         self.buttons = []
 
         self.bgms = []
+        self.text_score = Text_Object(100,50, str(self.round.player_1_best_score))
 
     def update(self):
         self.round.update()
         self.timer_display.set_text(str(round(self.round.get_countdown()/1000,2)))
         self.timer_display.update()
+        self.text_score.set_text(str(self.round.player_1_score))
+        self.text_score.update()
+        print(self.round.player_1_score)
         return
 
     def draw(self, screen):
         self.timer_display.draw(screen)
         self.screen.blit(self.target_image_surf, (self.screen.get_rect()[2]/2 - self.target_image_surf.get_size()[0]/2, self.screen.get_rect()[3]/2 - self.target_image_surf.get_size()[1]/2))
         self.camera.draw(screen)
+        self.text_score.draw(screen)
         return
