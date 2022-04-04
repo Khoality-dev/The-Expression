@@ -59,7 +59,7 @@ class Match():
             img_cam1 = self.FDetector.predict_crop(np.array(img_cam1))
             if (img_cam1 != None):
                 landmarks_cam1 = self.FLDetector.predict(img_cam1)
-                cam1_AV = self.AVEstimator.predict([img_cam1, landmarks_cam1])
+                cam1_AV = self.AVEstimator.predict(img_cam1, landmarks_cam1)
                 cam1_score = get_score(cam1_AV, self.target_AV)
                 if (self.player_1_best_score < cam1_score):
                     self.player_1_best_score = cam1_score
@@ -69,7 +69,7 @@ class Match():
             img_cam2 = self.FDetector.predict_crop(np.array(img_cam2))
             if (img_cam2 != None):
                 landmarks_cam2 = self.FLDetector.predict(img_cam2)
-                cam2_AV = self.AVEstimator.predict([img_cam2, landmarks_cam2])
+                cam2_AV = self.AVEstimator.predict(img_cam2, landmarks_cam2)
                 cam2_score = get_score(cam2_AV, self.target_AV)
                 if (self.player_2_best_score < cam2_score):
                     self.player_2_best_score = cam2_score
