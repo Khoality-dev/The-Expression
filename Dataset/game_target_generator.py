@@ -21,11 +21,10 @@ def extractor(args):
     print("Extracting faces from images")
     with alive_bar(len(img_files)) as bar:
         for img_name in img_files:
-            img = load_image(os.path.join(data_dir, img_name), grey_scale = False)
+            img = load_image(os.path.join(data_dir, img_name), W = target_W, H = target_H, grey_scale = False)
             faces = detector.detectMultiScale(img)
             if (len(faces)!=0):
-                resized_img = cv2.resize(img, (target_H,target_W))
-                cv2.imwrite(os.path.join(target_dir, img_name), resized_img)
+                cv2.imwrite(os.path.join(target_dir, img_name), img)
             else:
                 print("Unrecognized any face in", img_name)
             bar()

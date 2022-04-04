@@ -23,14 +23,14 @@ def h5_load_image_all(h5_file_path):
     return img_list
 
 
-def load_image(data_dir, W = None, H = None, grey_scale = False):
+def load_image(data_dir, H = None, W = None, grey_scale = False):
     flag = cv2.IMREAD_COLOR
     if (grey_scale):
         flag = cv2.IMREAD_GRAYSCALE
 
     img_load = cv2.imread(data_dir, flag)
     if (W != None and H!= None):
-        img_load = cv2.resize(img_load, (W,H))
+        img_load = cv2.resize(img_load, (H,W))
 
     return img_load
 
