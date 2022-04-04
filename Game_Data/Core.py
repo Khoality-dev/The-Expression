@@ -31,7 +31,7 @@ class Match():
 
         self.target = np.array(load_and_get_random_img())
         target_face = self.FDetector.predict_crop(self.target)
-        target_landmarks = self.FLDetector.predict(self.target_face)
+        target_landmarks = self.FLDetector.predict(target_face)
         self.target_AV = self.AVEstimator.predict([target_face, target_landmarks])
         return
     
