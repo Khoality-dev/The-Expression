@@ -2,7 +2,7 @@ import os
 import cv2
 import numpy as np
 import pygame
-from ..Model.models import *
+from Model.models import *
 from Dataset.utils.imglib import load_image
 
 def load_and_get_random_img(data_dir = "Game_Data/target_samples"):
@@ -15,14 +15,14 @@ def get_score(player_AV, target_AV):
 
 
 class Match():
-    def __init__(self, camera, FDetector, FLDetector, AVEstimator, length_in_miliseconds):
+    def __init__(self, camera, FDetector, FLDetector, AVEstimator, length_in_milisec):
         self.state = 0
         self.start_time = 0
         self.camera = camera
         self.AVEstimator = AVEstimator
         self.FDetector = FDetector
         self.FLDetector = FLDetector
-        self.length = length_in_miliseconds
+        self.length = length_in_milisec
         self.current_time = pygame.time.get_ticks()
         self.player_1_best_face = []
         self.player_2_best_face = []
