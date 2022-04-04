@@ -17,8 +17,8 @@ class Face_Detector():
         faces = self.detector.detectMultiScale(input_img)
         if (len(faces)>0):
             (x, y, w, h) = faces[0]
-            return x, y, w, h
-        return None
+            return [x, y, w, h]
+        return []
 
     def predict_crop(self, input_img):
         faces = self.detector.detectMultiScale(input_img)
@@ -27,7 +27,7 @@ class Face_Detector():
             crop_img = input_img[y:y+h, x:x+w]
             crop_img = cv2.resize(crop_img, (self.target_W, self.target_H))
             return crop_img
-        return None
+        return []
 
 class Facial_Landmark_Detector():
     def __init__(self):
@@ -46,7 +46,7 @@ class AV_Estimator():
         self.model = tf.keras.models.load_model(path)
 
     def predict(self, x, y):
-        return self.model.predict([np.resize(x,(1,target_W,target_H)), np.resize(y, (1,target_landmarks))])
+        return np.reshape(self.model.predict([np.resize(x,(1,target_W,target_H)), np.resize(y, (1,target_landmarks))]),(2,))
 
 class New_Game():
     def __init__(self, img_name):
