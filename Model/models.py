@@ -1,11 +1,8 @@
-from json.tool import main
 import cv2
 import tensorflow as tf
 import pandas as pd
 import numpy as np
 import dlib
-
-from tensorflow.keras.applications.vgg16 import preprocess_input
 
 target_W = 64
 target_H = 64
@@ -20,8 +17,8 @@ class Face_Detector():
         faces = self.detector.detectMultiScale(input_img)
         if (len(faces)>0):
             (x, y, w, h) = faces[0]
-            return x, y, w, h
-        return None
+            return [x, y, w, h]
+        return []
 
     def predict_crop(self, input_img):
         faces = self.detector.detectMultiScale(input_img)
@@ -30,7 +27,7 @@ class Face_Detector():
             crop_img = input_img[y:y+h, x:x+w]
             crop_img = cv2.resize(crop_img, (self.target_W, self.target_H))
             return crop_img
-        return None
+        return []
 
 class Facial_Landmark_Detector():
     def __init__(self):
@@ -48,10 +45,8 @@ class AV_Estimator():
     def __init__(self,path):
         self.model = tf.keras.models.load_model(path)
 
-    def predict(self, x):
-        img = np.resize(x,(1,target_W,target_H,3))
-        img = preprocess_input(img)
-        return self.model.predict(img)
+    def predict(self, x, y):
+        return np.reshape(self.model.predict([np.resize(x,(1,target_W,target_H)), np.resize(y, (1,target_landmarks))]),(2,))
 
 class New_Game():
     def __init__(self, img_name):
@@ -94,7 +89,3 @@ class New_Game():
         if(self.best_0 > self.best_1): return 0
         elif(self.best_1 > self.best_0): return 1
         else: return -1
-
-if __name__ == "__main__":
-    av = AV_Estimator('../models/best_model.h5')
-    print(av.model.summary())
