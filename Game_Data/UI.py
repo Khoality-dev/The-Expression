@@ -252,6 +252,9 @@ class Play_Menu():
         self.buttons = []
 
         self.bgms = []
+        self.text_score_p1 = Text_Object(center_x - (screen.get_rect()[2] / 4),center_y / 5, "Score: "+str(self.round.player_1_score))
+        self.text_score_p2 = Text_Object(center_x + (screen.get_rect()[2] / 4),center_y / 5, "Score: "+str(self.round.player_2_score))
+
 
     def update(self):
         self.round.update()
