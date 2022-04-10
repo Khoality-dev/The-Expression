@@ -1,12 +1,12 @@
 import os
 from typing import Text
 import cv2
-from cv2 import ROTATE_90_CLOCKWISE
 import pygame
 import numpy as np
 from Game_Data.Core import Match
 
-from Model.models import Face_Detector
+face_icon = pygame.transform.smoothscale(pygame.image.load('Game_Data/image/face_icon.png'), (32,32))
+not_face_icon = pygame.transform.smoothscale(pygame.image.load('Game_Data/image/not_face_icon.png'), (32,32))
 
 class Game_Object:
     def __init__(self, x, y, opacity = 100):
@@ -20,14 +20,16 @@ class Game_Object:
 class Bubble_Object(Game_Object):
     def __init__(self, img_path, x, y, size, opacity=1):
         super().__init__(x, y, opacity)
-        self.ico = pygame.image.load(img_path)
+        self.ico = pygame.image.load(img_path).convert_alpha()
+        self.ico = pygame.transform.smoothscale(self.ico, (100,100))
         self.size = (size,size)
         self.velocity = np.array((0,-1))
         self.time = 0
         self.on_screen = True
 
     def reset(self, img_path, x, y):
-        self.ico = self.ico = pygame.image.load(img_path)
+        self.ico = pygame.image.load(img_path).convert_alpha()
+        self.ico = pygame.transform.smoothscale(self.ico, (100,100))
         self.x, self.y = x, y
         self.on_screen = True
         
@@ -44,7 +46,7 @@ class Bubble_Object(Game_Object):
 
 
 class Text_Object(Game_Object):
-    def __init__(self, x, y, text, size = 56, opacity = 100, font = 'freesansbold.ttf'):
+    def __init__(self, x, y, text, size = 56, opacity = 100, font = 'Game_Data/font/Voltaire-Regular.ttf'):
         super().__init__(x, y, opacity)
         self.font = font
         self.font = pygame.font.Font(font, size)
@@ -76,7 +78,7 @@ class Button(Game_Object):
         self.text = Text_Object(self.x + width/2, self.y + height/2, text = title)
         self.state = state
         self.icons = []
-        self.sounds = []
+        self.sounds = pygame.mixer.Sound("Game_Data/sound/mixkit-cool-interface-click-tone-2568.wav")
         return
 
     def mouse_normal(self):
@@ -89,6 +91,7 @@ class Button(Game_Object):
         self.text.color = (255,255,255)
         self.color = (0,0,0)
         pygame.mouse.set_cursor(pygame.SYSTEM_CURSOR_HAND)
+        self.sounds.play()
         return
 
     def on_hover(self):
@@ -111,20 +114,23 @@ class Button(Game_Object):
         return
     
     def draw(self, screen):
-        pygame.draw.rect(screen, self.color,(self.x, self.y, self.width, self.height))
+        #pygame.draw.rect(screen, self.color,(self.x, self.y, self.width, self.height))
         self.text.draw(screen)
         return
 
 class Camera():
-    def __init__(self, pygame_camera, flip_x, flip_y, rotating_state):
+    def __init__(self, screen, pygame_camera, flip_x, flip_y, rotating_state):
         self.camera = pygame_camera
         self.flip_x = flip_x
         self.flip_y = flip_y
         self.rotating_state = rotating_state
-        self.detector = Face_Detector()
 
-        self.face_icon = pygame.transform.scale(pygame.image.load('Game_Data/image/face_icon.png'), (32,32))
-        self.not_face_icon = pygame.transform.scale(pygame.image.load('Game_Data/image/not_face_icon.png'), (32,32))
+        first_cam, second_cam = self.get_output_transform()
+        self.cam_size = (first_cam.get_width(), first_cam.get_height())
+        screen_center = (screen.get_rect()[2]/2,screen.get_rect()[3]/2)
+        self.portrait_1_loc = (screen_center[0]/2 - self.cam_size[0]/2,screen_center[1] - self.cam_size[1]/2)
+        self.portrait_2_loc = ((screen_center[0] + screen_center[0]/2) - self.cam_size[0]/2,screen_center[1] - self.cam_size[1]/2)
+
 
     def rotate(self):
         self.rotating_state = (self.rotating_state + 1) % 4
@@ -148,32 +154,17 @@ class Camera():
 
     def draw(self, screen):
         first_cam, second_cam = self.get_output_transform()
-        cropped_cam_size = (first_cam.get_width(), first_cam.get_height())
-        screen_center = (screen.get_rect()[2]/2,screen.get_rect()[3]/2)
-        portrait_1_loc = (screen_center[0]/2 - cropped_cam_size[0]/2,screen_center[1] - cropped_cam_size[1]/2)
-        portrait_2_loc = ((screen_center[0] + screen_center[0]/2) - cropped_cam_size[0]/2,screen_center[1] - cropped_cam_size[1]/2)
-        screen.blit(first_cam, portrait_1_loc)
-        screen.blit(second_cam, portrait_2_loc)
+        screen.blit(first_cam, self.portrait_1_loc)
+        screen.blit(second_cam, self.portrait_2_loc)
 
-        img_1 = cv2.rotate(cv2.cvtColor(pygame.surfarray.array3d(first_cam), cv2.COLOR_RGB2GRAY), ROTATE_90_CLOCKWISE)
-        prediction_1 = self.detector.predict(np.array(img_1))
-        if (prediction_1 == None):
-            screen.blit(self.not_face_icon, (portrait_1_loc[0], portrait_1_loc[1] - self.face_icon.get_size()[1]))
-        else:
-            screen.blit(self.face_icon, (portrait_1_loc[0], portrait_1_loc[1] - self.not_face_icon.get_size()[1]))
-        img_2 = cv2.rotate(cv2.cvtColor(pygame.surfarray.array3d(second_cam), cv2.COLOR_RGB2GRAY), ROTATE_90_CLOCKWISE)
-        prediction_2 = self.detector.predict(img_2)
-        if (prediction_2 == None):
-            screen.blit(self.not_face_icon, (portrait_2_loc[0], portrait_2_loc[1] - self.face_icon.get_size()[1]))
-        else:
-            screen.blit(self.face_icon, (portrait_2_loc[0], portrait_2_loc[1] - self.not_face_icon.get_size()[1]))
+        
             
 
 class Animated_Background(Game_Object):
     def __init__(self, screen):
         self.screen = screen
         self.bubble_list = [] 
-        self.emojis_files = [f for f in os.listdir("Game_Data/emojis") if os.path.isfile(os.path.join("Game_Data/emojis", f)) and (os.path.splitext(f)[1] == '.png')]
+        self.emojis_files = [f for f in os.listdir("Game_Data/emojis") if os.path.isfile(os.path.join("Game_Data/emojis", f)) and ((os.path.splitext(f)[1] == '.jpeg') or (os.path.splitext(f)[1] == '.png'))]
         for i in range(20):
             size = np.random.randint(5,20)
             img_path = os.path.join("Game_Data/emojis", np.random.choice(self.emojis_files))
@@ -181,7 +172,7 @@ class Animated_Background(Game_Object):
             self.bubble_list.append(bubble)
 
     def draw(self, screen):
-        self.screen.fill((210,210,210))
+        self.screen.fill((254,238,228))
         for bubble_idx in range(len(self.bubble_list)):
             if self.bubble_list[bubble_idx].on_screen == False:
                 img_path = os.path.join("Game_Data/emojis", np.random.choice(self.emojis_files))
@@ -194,12 +185,12 @@ class Main_Menu():
     def __init__(self, screen):
         self.screen = screen
         center_x, center_y = screen.get_rect()[2]/2, screen.get_rect()[3]/2
-        self.buttons = [Button(x = center_x, y = center_y + 100, height = 60, width = 120, title = "Play"),
-                        Button(x = center_x, y = center_y + 200, height = 60, width = 120, title = "Camera Setting"),
-                        Button(x = center_x, y = center_y + 300, height = 60, width = 120, title = "Exit")]
+        self.buttons = [Button(x = center_x, y = center_y + screen.get_rect()[3]/5, height = 60, width = 120, title = "Play")]
+        self.buttons.append(Button(x = center_x, y = self.buttons[-1].y + 150, height = 60, width = 120, title = "Camera Setting"))
+        self.buttons.append(Button(x = center_x, y = self.buttons[-1].y + 150, height = 60, width = 120, title = "Exit"))
         self.bgms = []
         self.logo = pygame.image.load("Game_Data/image/The Expression-logo.png")
-        self.logo = pygame.transform.scale(self.logo, (screen.get_rect()[2]/3.85,screen.get_rect()[3]/2.5))
+        self.logo = pygame.transform.smoothscale(self.logo, (screen.get_rect()[2]/3.85,screen.get_rect()[3]/2.5))
         return
     
     def update(self):
@@ -215,55 +206,126 @@ class Main_Menu():
 
 
 class Camera_Menu():
-    def __init__(self, camera, screen):
+    def __init__(self, camera, screen, FDetector):
         self.screen = screen
         self.camera = camera
+        self.FDetector = FDetector
         center_x, center_y = screen.get_rect()[2]/2, screen.get_rect()[3]/2
         self.buttons = [Button(x = center_x, y = center_y - 200, height = 60, width = 120, title = "Rotate"),
                         Button(x = center_x, y = center_y - 100, height = 60, width = 120, title = "Flip x axis"),
                         Button(x = center_x, y = center_y, height = 60, width = 120, title = "Flip y axis"),
                         Button(x = center_x, y = center_y + 200, height = 60, width = 120, title = "<< Back")]
-        self.bgms = []
+
         return
     
     
     def update(self):
         for button in self.buttons:
             button.update()
-        return
+
 
     def draw(self, screen):
         for button in self.buttons:
             button.draw(screen)
 
+        cam1, cam2 = self.camera.get_output_transform()
+
+        img_cam1 = cv2.rotate(pygame.surfarray.array3d(cam1), cv2.ROTATE_90_CLOCKWISE)
+        isFace = self.FDetector.predict(np.array(img_cam1))
+        if (len(isFace) != 0):
+            screen.blit(face_icon, (self.camera.portrait_1_loc[0], self.camera.portrait_1_loc[1] - face_icon.get_size()[1]))
+        else:
+            screen.blit(not_face_icon, (self.camera.portrait_1_loc[0], self.camera.portrait_1_loc[1] - not_face_icon.get_size()[1]))
+
+        img_cam2 = cv2.rotate(pygame.surfarray.array3d(cam2), cv2.ROTATE_90_CLOCKWISE)
+        isFace = self.FDetector.predict(np.array(img_cam2))
+        if (len(isFace) != 0):
+            screen.blit(face_icon, (self.camera.portrait_2_loc[0], self.camera.portrait_2_loc[1] - face_icon.get_size()[1]))
+        else:
+            screen.blit(not_face_icon, (self.camera.portrait_2_loc[0], self.camera.portrait_2_loc[1] - not_face_icon.get_size()[1]))
+
         self.camera.draw(screen)
         return
 
 class Play_Menu():
-    def __init__(self, camera, screen):
+    def __init__(self, AVEstimator, FDetector, camera, screen):
         self.screen = screen
         self.camera = camera
         
         center_x, center_y = screen.get_rect()[2]/2, screen.get_rect()[3]/2
-        self.round = Match(10*1000)
-        self.timer_display = Text_Object(center_x, 50, str(round(self.round.get_countdown()/1000,2)))
+
+        self.AVEstimator = AVEstimator
+        self.FDetector = FDetector
+        self.round = Match(self.camera, self.FDetector, self.AVEstimator, length_in_milisec = 30*1000)
+        self.starting = pygame.time.get_ticks()
+        self.timer_display = Text_Object(center_x, 50, "Ready!")
 
         self.target_image_surf = pygame.transform.rotate(pygame.surfarray.make_surface(self.round.target), -90)
-        self.buttons = []
+        self.buttons = [Button(center_x/2 , center_y*2 - center_y/5, 60,120,"Replay"),
+                        Button(center_x*2 - center_x/2, center_y*2 - center_y/5, 60, 120, "Return to Menu")]
 
-        self.bgms = []
-        self.text_score_p1 = Text_Object(center_x - (screen.get_rect()[2] / 4),center_y / 5, "Score: "+str(self.round.player_1_score))
-        self.text_score_p2 = Text_Object(center_x + (screen.get_rect()[2] / 4),center_y / 5, "Score: "+str(self.round.player_2_score))
-
+        self.text_score_p1 = Text_Object(center_x - (screen.get_rect()[2] / 4),center_y / 5, size = 24, text = "Error Score: "+str(self.round.player_1_score))
+        self.text_score_p2 = Text_Object(center_x + (screen.get_rect()[2] / 4),center_y / 5, size = 24, text = "Error Score: "+str(self.round.player_2_score))
 
     def update(self):
-        self.round.update()
-        self.timer_display.set_text(str(round(self.round.get_countdown()/1000,2)))
-        self.timer_display.update()
+        if not(self.round.isEnd()):
+            self.round.update()
+            if (self.round.state == 0):
+                countdown = max(7000 - (pygame.time.get_ticks() - self.starting), 0)
+                if (countdown <= 5000):
+                    self.timer_display.set_text(str(round((7000 - (pygame.time.get_ticks() - self.starting))/1000)))
+                    self.timer_display.update()
+                if (countdown <= 0):
+                    self.round.start()
+                    return
+
+            if (self.round.state == 1):
+                self.timer_display.set_text(str(round(self.round.get_countdown()/1000,2)))
+                self.timer_display.update()
+                self.text_score_p1.set_text("Error Value: "+str(self.round.player_1_score))
+                self.text_score_p1.update()
+                self.text_score_p2.set_text("Error Value: "+str(self.round.player_2_score))
+                self.text_score_p2.update()
+        else:
+            for button in self.buttons:
+                button.update()
+
         return
 
     def draw(self, screen):
-        self.timer_display.draw(screen)
         self.screen.blit(self.target_image_surf, (self.screen.get_rect()[2]/2 - self.target_image_surf.get_size()[0]/2, self.screen.get_rect()[3]/2 - self.target_image_surf.get_size()[1]/2))
-        self.camera.draw(screen)
+        if not(self.round.isEnd()):
+            self.timer_display.draw(screen)
+            self.camera.draw(screen)
+            self.text_score_p1.draw(screen)
+            self.text_score_p2.draw(screen)
+
+            if (self.round.isFace_p1 == False):
+                self.screen.blit(not_face_icon, (self.camera.portrait_1_loc[0], self.camera.portrait_1_loc[1] - face_icon.get_size()[1]))
+            else:
+                self.screen.blit(face_icon, (self.camera.portrait_1_loc[0], self.camera.portrait_1_loc[1] - not_face_icon.get_size()[1]))
+
+            if (self.round.isFace_p2 == False):
+                self.screen.blit(not_face_icon, (self.camera.portrait_2_loc[0], self.camera.portrait_2_loc[1] - face_icon.get_size()[1]))
+            else:
+                self.screen.blit(face_icon, (self.camera.portrait_2_loc[0], self.camera.portrait_2_loc[1] - not_face_icon.get_size()[1]))
+            
+        else:
+            if type(self.round.player_1_best_face) is pygame.Surface:
+                img_pos_x, img_pos_y = self.camera.portrait_1_loc[0]+50, self.camera.portrait_1_loc[1]
+                score = Text_Object(img_pos_x + self.camera.cam_size[0]/2, 0, size = 24, text = "Lowest Error Value: " + str(self.round.player_1_best_score))
+                score.y = img_pos_y - score.height
+                score.update()
+                score.draw(screen)
+                screen.blit(self.round.player_1_best_face, (img_pos_x, img_pos_y))
+            if type(self.round.player_2_best_face) is pygame.Surface:
+                img_pos_x, img_pos_y = self.camera.portrait_2_loc[0]-50, self.camera.portrait_2_loc[1]
+                score = Text_Object(img_pos_x + self.camera.cam_size[0]/2, 0, size = 24, text = "Lowest Error Value: " +str(self.round.player_2_best_score))
+                score.y = img_pos_y - score.height
+                score.update()
+                score.draw(screen)
+                screen.blit(self.round.player_2_best_face, (self.camera.portrait_2_loc[0]-50, self.camera.portrait_2_loc[1]))
+
+            for button in self.buttons:
+                button.draw(self.screen)
         return
