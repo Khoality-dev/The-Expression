@@ -29,7 +29,8 @@ def camera_setup():
     pycamera = pygame.camera.Camera(list_pycam[int(pycamera)])
     pycamera.start()
     
-    return pycamera
+    camera = Camera(pycamera, flip_x = False, flip_y = False, rotating_state = 0)
+    return camera
 
 def setup():
     pygame.init()
@@ -41,17 +42,17 @@ def setup():
     
     return screen, clock
 
-FLD = Facial_Landmark_Detector()
-AV = AV_Estimator(path = "Model/best_model.h5")
-FD = Face_Detector()
 
-pycamera = camera_setup()
+camera = camera_setup()
 screen, clock = setup()
-camera = Camera(screen, pycamera, flip_x = False, flip_y = False, rotating_state = 0)
 background = Animated_Background(screen = screen)
 menu = Main_Menu(screen)
 
 
+#FLD = Facial_Landmark_Detector()
+
+#AV = AV_Estimator()
+#AV.load_weights("Model/trained_model.h5")
 
 
 def update():
@@ -77,42 +78,26 @@ if __name__ == "__main__":
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 exit = True
-            if (event.type == pygame.MOUSEBUTTONUP):
-                if (current_menu == 0):
-                    if (menu.buttons[0].on_hover()):
-                        current_menu = 1
-                        menu = Play_Menu(AV, FD, FLD, camera, screen)
-                        pygame.mouse.set_cursor(pygame.SYSTEM_CURSOR_ARROW)
-
-                    elif (menu.buttons[1].on_hover()):
-                        current_menu = 2
-                        menu = Camera_Menu(camera, screen, FD)
-                        pygame.mouse.set_cursor(pygame.SYSTEM_CURSOR_ARROW)
-
-                    elif (menu.buttons[2].on_hover()):
-                        exit = True
-                elif (current_menu == 1):
-                    if (menu.round.isEnd()):
-                        if (event.type == pygame.MOUSEBUTTONUP):
-                            if (menu.buttons[0].on_hover()):
-                                menu = Play_Menu(AV, FD, FLD, camera, screen)
-                                pygame.mouse.set_cursor(pygame.SYSTEM_CURSOR_ARROW)
-                            elif (menu.buttons[1].on_hover()):
-                                current_menu = 0
-                                menu = Main_Menu(screen)
-                                pygame.mouse.set_cursor(pygame.SYSTEM_CURSOR_ARROW)
-                elif (current_menu == 2):
-                    if (event.type == pygame.MOUSEBUTTONUP):
-                        if (menu.buttons[0].on_hover()):
-                            camera.rotate()
-                        elif (menu.buttons[1].on_hover()):
-                            camera.flip_on_x()
-                        elif (menu.buttons[2].on_hover()):
-                            camera.flip_on_y()
-                        elif (menu.buttons[3].on_hover()):
-                            current_menu = 0
-                            menu = Main_Menu(screen)
-                            pygame.mouse.set_cursor(pygame.SYSTEM_CURSOR_ARROW)
+            if (current_menu == 0):
+                if (event.type == pygame.MOUSEBUTTONUP and menu.buttons[0].on_hover()):
+                    current_menu = 1
+                    menu = Play_Menu(camera, screen)
+                    menu.round.start()
+                elif (event.type == pygame.MOUSEBUTTONUP and menu.buttons[1].on_hover()):
+                    current_menu = 2
+                    menu = Camera_Menu(camera, screen)
+                elif (event.type == pygame.MOUSEBUTTONUP and menu.buttons[2].on_hover()):
+                    exit = True
+            elif (current_menu == 2):
+                if (event.type == pygame.MOUSEBUTTONUP and menu.buttons[0].on_hover()):
+                    camera.rotate()
+                elif (event.type == pygame.MOUSEBUTTONUP and menu.buttons[1].on_hover()):
+                    camera.flip_on_x()
+                elif (event.type == pygame.MOUSEBUTTONUP and menu.buttons[2].on_hover()):
+                    camera.flip_on_y()
+                elif (event.type == pygame.MOUSEBUTTONUP and menu.buttons[3].on_hover()):
+                    current_menu = 0
+                    menu = Main_Menu(screen)
         
         update()
         draw()
