@@ -5,6 +5,8 @@ import pandas as pd
 import numpy as np
 import dlib
 
+from tensorflow.keras.applications.vgg16 import preprocess_input
+
 target_W = 64
 target_H = 64
 target_landmarks = 136
@@ -46,8 +48,10 @@ class AV_Estimator():
     def __init__(self,path):
         self.model = tf.keras.models.load_model(path)
 
-    def predict(self, x, y):
-        return self.model.predict([np.resize(x,(1,target_W,target_H)), np.resize(y, (1,target_landmarks))])
+    def predict(self, x):
+        img = np.resize(x,(1,target_W,target_H,3))
+        img = preprocess_input(img)
+        return self.model.predict(img)
 
 class New_Game():
     def __init__(self, img_name):
