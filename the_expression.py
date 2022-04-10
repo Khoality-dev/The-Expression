@@ -5,7 +5,7 @@ import argparse
 import os
 
 from Game_Data.UI import *
-from Model.models import AV_Estimator, Face_Detector, Facial_Landmark_Detector
+from Model.models import AV_Estimator, Face_Detector
 
 def camera_setup():
     pygame.camera.init()
@@ -41,7 +41,6 @@ def setup():
     
     return screen, clock
 
-FLD = Facial_Landmark_Detector()
 AV = AV_Estimator(path = "Model/best_model.h5")
 FD = Face_Detector()
 
@@ -81,7 +80,7 @@ if __name__ == "__main__":
                 if (current_menu == 0):
                     if (menu.buttons[0].on_hover()):
                         current_menu = 1
-                        menu = Play_Menu(AV, FD, FLD, camera, screen)
+                        menu = Play_Menu(AV, FD, camera, screen)
                         pygame.mouse.set_cursor(pygame.SYSTEM_CURSOR_ARROW)
 
                     elif (menu.buttons[1].on_hover()):
@@ -95,7 +94,7 @@ if __name__ == "__main__":
                     if (menu.round.isEnd()):
                         if (event.type == pygame.MOUSEBUTTONUP):
                             if (menu.buttons[0].on_hover()):
-                                menu = Play_Menu(AV, FD, FLD, camera, screen)
+                                menu = Play_Menu(AV, FD, camera, screen)
                                 pygame.mouse.set_cursor(pygame.SYSTEM_CURSOR_ARROW)
                             elif (menu.buttons[1].on_hover()):
                                 current_menu = 0
