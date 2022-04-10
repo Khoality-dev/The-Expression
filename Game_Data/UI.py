@@ -46,7 +46,7 @@ class Bubble_Object(Game_Object):
 
 
 class Text_Object(Game_Object):
-    def __init__(self, x, y, text, size = 56, opacity = 100, font = 'freesansbold.ttf'):
+    def __init__(self, x, y, text, size = 56, opacity = 100, font = 'Game_Data/font/Voltaire-Regular.ttf'):
         super().__init__(x, y, opacity)
         self.font = font
         self.font = pygame.font.Font(font, size)
@@ -229,14 +229,14 @@ class Camera_Menu():
 
         cam1, cam2 = self.camera.get_output_transform()
 
-        img_cam1 = cv2.rotate(cv2.cvtColor(pygame.surfarray.array3d(cam1), cv2.COLOR_RGB2GRAY), cv2.ROTATE_90_CLOCKWISE)
+        img_cam1 = cv2.rotate(pygame.surfarray.array3d(cam1), cv2.ROTATE_90_CLOCKWISE)
         isFace = self.FDetector.predict(np.array(img_cam1))
         if (len(isFace) != 0):
             screen.blit(face_icon, (self.camera.portrait_1_loc[0], self.camera.portrait_1_loc[1] - face_icon.get_size()[1]))
         else:
             screen.blit(not_face_icon, (self.camera.portrait_1_loc[0], self.camera.portrait_1_loc[1] - not_face_icon.get_size()[1]))
 
-        img_cam2 = cv2.rotate(cv2.cvtColor(pygame.surfarray.array3d(cam2), cv2.COLOR_RGB2GRAY), cv2.ROTATE_90_CLOCKWISE)
+        img_cam2 = cv2.rotate(pygame.surfarray.array3d(cam2), cv2.ROTATE_90_CLOCKWISE)
         isFace = self.FDetector.predict(np.array(img_cam2))
         if (len(isFace) != 0):
             screen.blit(face_icon, (self.camera.portrait_2_loc[0], self.camera.portrait_2_loc[1] - face_icon.get_size()[1]))
@@ -265,8 +265,8 @@ class Play_Menu():
                         Button(center_x*2 - center_x/2, center_y*2 - center_y/5, 60, 120, "Return to Menu")]
 
         self.bgms = []
-        self.text_score_p1 = Text_Object(center_x - (screen.get_rect()[2] / 4),center_y / 5, "Score: "+str(self.round.player_1_score))
-        self.text_score_p2 = Text_Object(center_x + (screen.get_rect()[2] / 4),center_y / 5, "Score: "+str(self.round.player_2_score))
+        self.text_score_p1 = Text_Object(center_x - (screen.get_rect()[2] / 4),center_y / 5, size = 24, text = "Error Score: "+str(self.round.player_1_score))
+        self.text_score_p2 = Text_Object(center_x + (screen.get_rect()[2] / 4),center_y / 5, size = 24, text = "Error Score: "+str(self.round.player_2_score))
 
     def update(self):
         if not(self.round.isEnd()):
@@ -283,9 +283,9 @@ class Play_Menu():
             if (self.round.state == 1):
                 self.timer_display.set_text(str(round(self.round.get_countdown()/1000,2)))
                 self.timer_display.update()
-                self.text_score_p1.set_text(str(self.round.player_1_score))
+                self.text_score_p1.set_text("Error Value: "+str(self.round.player_1_score))
                 self.text_score_p1.update()
-                self.text_score_p2.set_text(str(self.round.player_2_score))
+                self.text_score_p2.set_text("Error Value: "+str(self.round.player_2_score))
                 self.text_score_p2.update()
         else:
             for button in self.buttons:
@@ -294,20 +294,19 @@ class Play_Menu():
         return
 
     def draw(self, screen):
-        
+        self.screen.blit(self.target_image_surf, (self.screen.get_rect()[2]/2 - self.target_image_surf.get_size()[0]/2, self.screen.get_rect()[3]/2 - self.target_image_surf.get_size()[1]/2))
         if not(self.round.isEnd()):
             self.timer_display.draw(screen)
-            self.screen.blit(self.target_image_surf, (self.screen.get_rect()[2]/2 - self.target_image_surf.get_size()[0]/2, self.screen.get_rect()[3]/2 - self.target_image_surf.get_size()[1]/2))
             self.camera.draw(screen)
             self.text_score_p1.draw(screen)
             self.text_score_p2.draw(screen)
 
-            if (self.round.player_1_score == 0):
+            if (self.round.isFace_p1 == False):
                 self.screen.blit(not_face_icon, (self.camera.portrait_1_loc[0], self.camera.portrait_1_loc[1] - face_icon.get_size()[1]))
             else:
                 self.screen.blit(face_icon, (self.camera.portrait_1_loc[0], self.camera.portrait_1_loc[1] - not_face_icon.get_size()[1]))
 
-            if (self.round.player_2_score == 0):
+            if (self.round.isFace_p2 == False):
                 self.screen.blit(not_face_icon, (self.camera.portrait_2_loc[0], self.camera.portrait_2_loc[1] - face_icon.get_size()[1]))
             else:
                 self.screen.blit(face_icon, (self.camera.portrait_2_loc[0], self.camera.portrait_2_loc[1] - not_face_icon.get_size()[1]))
@@ -315,14 +314,14 @@ class Play_Menu():
         else:
             if type(self.round.player_1_best_face) is pygame.Surface:
                 img_pos_x, img_pos_y = self.camera.portrait_1_loc[0]+50, self.camera.portrait_1_loc[1]
-                score = Text_Object(img_pos_x + self.camera.cam_size[0]/2, 0, str(self.round.player_1_best_score))
+                score = Text_Object(img_pos_x + self.camera.cam_size[0]/2, 0, size = 24, text = "Lowest Error Value: " + str(self.round.player_1_best_score))
                 score.y = img_pos_y - score.height
                 score.update()
                 score.draw(screen)
                 screen.blit(self.round.player_1_best_face, (img_pos_x, img_pos_y))
             if type(self.round.player_2_best_face) is pygame.Surface:
                 img_pos_x, img_pos_y = self.camera.portrait_2_loc[0]-50, self.camera.portrait_2_loc[1]
-                score = Text_Object(img_pos_x + self.camera.cam_size[0]/2, 0, str(self.round.player_2_best_score))
+                score = Text_Object(img_pos_x + self.camera.cam_size[0]/2, 0, size = 24, text = "Lowest Error Value: " +str(self.round.player_2_best_score))
                 score.y = img_pos_y - score.height
                 score.update()
                 score.draw(screen)
