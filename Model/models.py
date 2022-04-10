@@ -10,6 +10,10 @@ target_W = 64
 target_H = 64
 target_landmarks = 136
 
+target_W = 64
+target_H = 64
+target_landmarks = 136
+
 class Face_Detector():
     def __init__(self):
         self.detector = cv2.CascadeClassifier("Dataset/utils/haarcascade_frontalface_alt2.xml")
