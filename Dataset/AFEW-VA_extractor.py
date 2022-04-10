@@ -43,7 +43,7 @@ def extractor(args):
             img_name = file_names[label_idx]
             if not(os.path.isfile(os.path.join(target_dir, os.path.splitext(img_name)[0] + ".png"))):
                 if (os.path.isfile(os.path.join(data_dir,img_name))):
-                    img = load_image(os.path.join(data_dir, img_name), grey_scale = True)
+                    img = load_image(os.path.join(data_dir, img_name), grey_scale = False)
                     faces = detector.detectMultiScale(img)
                     best_n_landmarks = 0
                     (best_x, best_y, best_w, best_h) = (-1,-1,-1,-1)

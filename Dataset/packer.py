@@ -13,7 +13,7 @@ def packer(args):
     print("Packing up dataset...")
     with alive_bar(len(img_files)) as bar:
         for file_name in img_files:
-            img = load_image(os.path.join(data_dir, file_name), grey_scale = True)
+            img = load_image(os.path.join(data_dir, file_name), grey_scale = False)
             h5_file.create_dataset(file_name, data = img)
             bar()
     print("Done!")
