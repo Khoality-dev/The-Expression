@@ -172,7 +172,7 @@ class Animated_Background(Game_Object):
             self.bubble_list.append(bubble)
 
     def draw(self, screen):
-        self.screen.fill((210,210,210))
+        self.screen.fill((254,238,228))
         for bubble_idx in range(len(self.bubble_list)):
             if self.bubble_list[bubble_idx].on_screen == False:
                 img_path = os.path.join("Game_Data/emojis", np.random.choice(self.emojis_files))
