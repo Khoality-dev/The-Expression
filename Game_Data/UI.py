@@ -5,8 +5,6 @@ import pygame
 import numpy as np
 from Game_Data.Core import Match
 
-from Model.models import Face_Detector
-
 face_icon = pygame.transform.scale(pygame.image.load('Game_Data/image/face_icon.png'), (32,32))
 not_face_icon = pygame.transform.scale(pygame.image.load('Game_Data/image/not_face_icon.png'), (32,32))
 
@@ -247,7 +245,7 @@ class Camera_Menu():
         return
 
 class Play_Menu():
-    def __init__(self, AVEstimator, FDetector, FLDetector, camera, screen):
+    def __init__(self, AVEstimator, FDetector, camera, screen):
         self.screen = screen
         self.camera = camera
         
@@ -255,8 +253,7 @@ class Play_Menu():
 
         self.AVEstimator = AVEstimator
         self.FDetector = FDetector
-        self.FLDetector= FLDetector
-        self.round = Match(self.camera, self.FDetector, self.FLDetector, self.AVEstimator, length_in_milisec = 30*1000)
+        self.round = Match(self.camera, self.FDetector, self.AVEstimator, length_in_milisec = 30*1000)
         self.starting = pygame.time.get_ticks()
         self.timer_display = Text_Object(center_x, 50, str(round(self.round.get_countdown()/1000,2)))
 

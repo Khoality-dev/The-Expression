@@ -14,13 +14,12 @@ def get_score(player_AV, target_AV):
     return np.linalg.norm(player_AV - target_AV)
 
 class Match():
-    def __init__(self, camera, FDetector, FLDetector, AVEstimator, length_in_milisec):
+    def __init__(self, camera, FDetector, AVEstimator, length_in_milisec):
         self.state = 0
         self.start_time = 0
         self.camera = camera
         self.AVEstimator = AVEstimator
         self.FDetector = FDetector
-        self.FLDetector = FLDetector
         self.length = length_in_milisec
         self.current_time = pygame.time.get_ticks()
         self.player_1_best_face = []
