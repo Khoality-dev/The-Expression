@@ -265,8 +265,8 @@ class Play_Menu():
                         Button(center_x*2 - center_x/2, center_y*2 - center_y/5, 60, 120, "Return to Menu")]
 
         self.bgms = []
-        self.text_score_p1 = Text_Object(center_x - (screen.get_rect()[2] / 4),center_y / 5, "Score: "+str(self.round.player_1_best_score))
-        self.text_score_p2 = Text_Object(center_x + (screen.get_rect()[2] / 4),center_y / 5, "Score: "+str(self.round.player_1_best_score))
+        self.text_score_p1 = Text_Object(center_x - (screen.get_rect()[2] / 4),center_y / 5, "Score: "+str(self.round.player_1_score))
+        self.text_score_p2 = Text_Object(center_x + (screen.get_rect()[2] / 4),center_y / 5, "Score: "+str(self.round.player_2_score))
 
     def update(self):
         if not(self.round.isEnd()):
