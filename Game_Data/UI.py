@@ -255,7 +255,7 @@ class Play_Menu():
         self.FDetector = FDetector
         self.round = Match(self.camera, self.FDetector, self.AVEstimator, length_in_milisec = 30*1000)
         self.starting = pygame.time.get_ticks()
-        self.timer_display = Text_Object(center_x, 50, str(round(self.round.get_countdown()/1000,2)))
+        self.timer_display = Text_Object(center_x, 50, "Ready!")
 
         self.target_image_surf = pygame.transform.rotate(pygame.surfarray.make_surface(self.round.target), -90)
         self.buttons = [Button(center_x/2 , center_y*2 - center_y/5, 60,120,"Replay"),
@@ -269,13 +269,13 @@ class Play_Menu():
         if not(self.round.isEnd()):
             self.round.update()
             if (self.round.state == 0):
-                countdown = max(5000 - (pygame.time.get_ticks() - self.starting), 0)
+                countdown = max(7000 - (pygame.time.get_ticks() - self.starting), 0)
+                if (countdown <= 5000):
+                    self.timer_display.set_text(str(round((7000 - (pygame.time.get_ticks() - self.starting))/1000)))
+                    self.timer_display.update()
                 if (countdown <= 0):
                     self.round.start()
                     return
-                else:
-                    self.timer_display.set_text(str(round((5000 - (pygame.time.get_ticks() - self.starting))/1000)))
-                    self.timer_display.update()
 
             if (self.round.state == 1):
                 self.timer_display.set_text(str(round(self.round.get_countdown()/1000,2)))
