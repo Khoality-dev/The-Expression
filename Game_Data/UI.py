@@ -283,8 +283,10 @@ class Play_Menu():
             if (self.round.state == 1):
                 self.timer_display.set_text(str(round(self.round.get_countdown()/1000,2)))
                 self.timer_display.update()
-                self.text_score.set_text(str(self.round.player_1_score))
-                self.text_score.update()
+                self.text_score_p1.set_text(str(self.round.player_1_score))
+                self.text_score_p1.update()
+                self.text_score_p2.set_text(str(self.round.player_2_score))
+                self.text_score_p2.update()
         else:
             for button in self.buttons:
                 button.update()
@@ -297,7 +299,8 @@ class Play_Menu():
             self.timer_display.draw(screen)
             self.screen.blit(self.target_image_surf, (self.screen.get_rect()[2]/2 - self.target_image_surf.get_size()[0]/2, self.screen.get_rect()[3]/2 - self.target_image_surf.get_size()[1]/2))
             self.camera.draw(screen)
-            self.text_score.draw(screen)
+            self.text_score_p1.draw(screen)
+            self.text_score_p2.draw(screen)
 
             if (self.round.player_1_score == 0):
                 self.screen.blit(not_face_icon, (self.camera.portrait_1_loc[0], self.camera.portrait_1_loc[1] - face_icon.get_size()[1]))
