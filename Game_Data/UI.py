@@ -5,8 +5,8 @@ import pygame
 import numpy as np
 from Game_Data.Core import Match
 
-face_icon = pygame.transform.scale(pygame.image.load('Game_Data/image/face_icon.png'), (32,32))
-not_face_icon = pygame.transform.scale(pygame.image.load('Game_Data/image/not_face_icon.png'), (32,32))
+face_icon = pygame.transform.smoothscale(pygame.image.load('Game_Data/image/face_icon.png'), (32,32))
+not_face_icon = pygame.transform.smoothscale(pygame.image.load('Game_Data/image/not_face_icon.png'), (32,32))
 
 class Game_Object:
     def __init__(self, x, y, opacity = 100):
@@ -20,14 +20,16 @@ class Game_Object:
 class Bubble_Object(Game_Object):
     def __init__(self, img_path, x, y, size, opacity=1):
         super().__init__(x, y, opacity)
-        self.ico = pygame.image.load(img_path)
+        self.ico = pygame.image.load(img_path).convert_alpha()
+        self.ico = pygame.transform.smoothscale(self.ico, (100,100))
         self.size = (size,size)
         self.velocity = np.array((0,-1))
         self.time = 0
         self.on_screen = True
 
     def reset(self, img_path, x, y):
-        self.ico = self.ico = pygame.image.load(img_path)
+        self.ico = pygame.image.load(img_path).convert_alpha()
+        self.ico = pygame.transform.smoothscale(self.ico, (100,100))
         self.x, self.y = x, y
         self.on_screen = True
         
@@ -76,7 +78,7 @@ class Button(Game_Object):
         self.text = Text_Object(self.x + width/2, self.y + height/2, text = title)
         self.state = state
         self.icons = []
-        self.sounds = []
+        self.sounds = pygame.mixer.Sound("Game_Data/sound/mixkit-cool-interface-click-tone-2568.wav")
         return
 
     def mouse_normal(self):
@@ -89,6 +91,7 @@ class Button(Game_Object):
         self.text.color = (255,255,255)
         self.color = (0,0,0)
         pygame.mouse.set_cursor(pygame.SYSTEM_CURSOR_HAND)
+        self.sounds.play()
         return
 
     def on_hover(self):
@@ -161,7 +164,7 @@ class Animated_Background(Game_Object):
     def __init__(self, screen):
         self.screen = screen
         self.bubble_list = [] 
-        self.emojis_files = [f for f in os.listdir("Game_Data/emojis") if os.path.isfile(os.path.join("Game_Data/emojis", f)) and (os.path.splitext(f)[1] == '.png')]
+        self.emojis_files = [f for f in os.listdir("Game_Data/emojis") if os.path.isfile(os.path.join("Game_Data/emojis", f)) and ((os.path.splitext(f)[1] == '.jpeg') or (os.path.splitext(f)[1] == '.png'))]
         for i in range(20):
             size = np.random.randint(5,20)
             img_path = os.path.join("Game_Data/emojis", np.random.choice(self.emojis_files))
@@ -182,12 +185,12 @@ class Main_Menu():
     def __init__(self, screen):
         self.screen = screen
         center_x, center_y = screen.get_rect()[2]/2, screen.get_rect()[3]/2
-        self.buttons = [Button(x = center_x, y = center_y + 100, height = 60, width = 120, title = "Play"),
-                        Button(x = center_x, y = center_y + 200, height = 60, width = 120, title = "Camera Setting"),
-                        Button(x = center_x, y = center_y + 300, height = 60, width = 120, title = "Exit")]
+        self.buttons = [Button(x = center_x, y = center_y + screen.get_rect()[3]/5, height = 60, width = 120, title = "Play")]
+        self.buttons.append(Button(x = center_x, y = self.buttons[-1].y + 150, height = 60, width = 120, title = "Camera Setting"))
+        self.buttons.append(Button(x = center_x, y = self.buttons[-1].y + 150, height = 60, width = 120, title = "Exit"))
         self.bgms = []
         self.logo = pygame.image.load("Game_Data/image/The Expression-logo.png")
-        self.logo = pygame.transform.scale(self.logo, (screen.get_rect()[2]/3.85,screen.get_rect()[3]/2.5))
+        self.logo = pygame.transform.smoothscale(self.logo, (screen.get_rect()[2]/3.85,screen.get_rect()[3]/2.5))
         return
     
     def update(self):
@@ -212,7 +215,7 @@ class Camera_Menu():
                         Button(x = center_x, y = center_y - 100, height = 60, width = 120, title = "Flip x axis"),
                         Button(x = center_x, y = center_y, height = 60, width = 120, title = "Flip y axis"),
                         Button(x = center_x, y = center_y + 200, height = 60, width = 120, title = "<< Back")]
-        self.bgms = []
+
         return
     
     
@@ -261,7 +264,6 @@ class Play_Menu():
         self.buttons = [Button(center_x/2 , center_y*2 - center_y/5, 60,120,"Replay"),
                         Button(center_x*2 - center_x/2, center_y*2 - center_y/5, 60, 120, "Return to Menu")]
 
-        self.bgms = []
         self.text_score_p1 = Text_Object(center_x - (screen.get_rect()[2] / 4),center_y / 5, size = 24, text = "Error Score: "+str(self.round.player_1_score))
         self.text_score_p2 = Text_Object(center_x + (screen.get_rect()[2] / 4),center_y / 5, size = 24, text = "Error Score: "+str(self.round.player_2_score))
 

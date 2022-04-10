@@ -35,7 +35,7 @@ def setup():
     pygame.init()
     pygame.display.init()
     screen = pygame.display.set_mode()
-    
+    pygame.mixer.init()
     
     clock = pygame.time.Clock()
     
@@ -49,8 +49,11 @@ screen, clock = setup()
 camera = Camera(screen, pycamera, flip_x = False, flip_y = False, rotating_state = 0)
 background = Animated_Background(screen = screen)
 menu = Main_Menu(screen)
-
-
+click_sound = pygame.mixer.Sound("Game_Data/sound/mixkit-game-click-1114.wav")
+bgms = ["Game_Data/sound/bensound-acousticbreeze.mp3", "Game_Data/sound/bensound-jazzyfrenchy.mp3"]
+pygame.mixer.music.load(bgms[0])
+pygame.mixer.music.set_volume(0.3)
+pygame.mixer.music.play()
 
 
 def update():
@@ -77,41 +80,62 @@ if __name__ == "__main__":
             if event.type == pygame.QUIT:
                 exit = True
             if (event.type == pygame.MOUSEBUTTONUP):
+                flag = 0
                 if (current_menu == 0):
                     if (menu.buttons[0].on_hover()):
                         current_menu = 1
                         menu = Play_Menu(AV, FD, camera, screen)
+                        pygame.mixer.music.unload()
+                        pygame.mixer.music.load(bgms[1])
+                        pygame.mixer.music.play()
                         pygame.mouse.set_cursor(pygame.SYSTEM_CURSOR_ARROW)
+                        flag = 1
 
                     elif (menu.buttons[1].on_hover()):
                         current_menu = 2
                         menu = Camera_Menu(camera, screen, FD)
                         pygame.mouse.set_cursor(pygame.SYSTEM_CURSOR_ARROW)
+                        flag = 1
 
                     elif (menu.buttons[2].on_hover()):
                         exit = True
+                        flag = 1
+
                 elif (current_menu == 1):
                     if (menu.round.isEnd()):
-                        if (event.type == pygame.MOUSEBUTTONUP):
-                            if (menu.buttons[0].on_hover()):
-                                menu = Play_Menu(AV, FD, camera, screen)
-                                pygame.mouse.set_cursor(pygame.SYSTEM_CURSOR_ARROW)
-                            elif (menu.buttons[1].on_hover()):
-                                current_menu = 0
-                                menu = Main_Menu(screen)
-                                pygame.mouse.set_cursor(pygame.SYSTEM_CURSOR_ARROW)
+                        if (menu.buttons[0].on_hover()):
+                            menu = Play_Menu(AV, FD, camera, screen)
+                            pygame.mixer.music.unload()
+                            pygame.mixer.music.load(bgms[1])
+                            pygame.mixer.music.play()
+                            pygame.mouse.set_cursor(pygame.SYSTEM_CURSOR_ARROW)
+                            flag = 1
+                        elif (menu.buttons[1].on_hover()):
+                            current_menu = 0
+                            menu = Main_Menu(screen)
+                            pygame.mixer.music.unload()
+                            pygame.mixer.music.load(bgms[0])
+                            pygame.mixer.music.play()
+                            pygame.mouse.set_cursor(pygame.SYSTEM_CURSOR_ARROW)
+                            flag = 1 
                 elif (current_menu == 2):
-                    if (event.type == pygame.MOUSEBUTTONUP):
                         if (menu.buttons[0].on_hover()):
                             camera.rotate()
+                            flag = 1
                         elif (menu.buttons[1].on_hover()):
                             camera.flip_on_x()
+                            flag = 1
                         elif (menu.buttons[2].on_hover()):
                             camera.flip_on_y()
+                            flag = 1
                         elif (menu.buttons[3].on_hover()):
                             current_menu = 0
                             menu = Main_Menu(screen)
                             pygame.mouse.set_cursor(pygame.SYSTEM_CURSOR_ARROW)
+                            flag = 1
+
+                if (flag == 1):
+                    click_sound.play()
         
         update()
         draw()

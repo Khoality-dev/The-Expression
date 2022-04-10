@@ -32,6 +32,8 @@ class Match():
         self.isFace_p1 = False
         self.isFace_p2 = False
 
+        self.bgm_victory = pygame.mixer.Sound("Game_Data/sound/fiftysounds-sfx-victory5.mp3")
+
         self.target = np.array(load_and_get_random_img())
         target_face = self.FDetector.predict_crop(self.target)
         #target_landmarks = self.FLDetector.predict(target_face)
@@ -54,6 +56,8 @@ class Match():
         if (self.state == 1):
             if (self.get_countdown() <= 0):
                 self.state = 2
+                pygame.mixer.music.unload()
+                self.bgm_victory.play()
 
             if not(self.isEnd()):
                 self.current_time = pygame.time.get_ticks()
@@ -78,12 +82,10 @@ class Match():
                 img_cam2 = cv2.rotate(pygame.surfarray.array3d(cam2), cv2.ROTATE_90_CLOCKWISE)
                 img_cam2 = self.FDetector.predict_crop(np.array(img_cam2))
                 self.player_2_score = 10
-                print("Target ",self.target_AV)
                 if (len(img_cam2) != 0):
                     self.isFace_p2 = True
                     #landmarks_cam2 = self.FLDetector.predict(img_cam2)
                     cam2_AV = self.AVEstimator.predict(img_cam2)*10
-                    print("cam2 ",cam2_AV)
                     self.player_2_score = get_score(cam2_AV, self.target_AV)
                     if (self.player_2_best_score > self.player_2_score):
                         self.player_2_best_score = self.player_2_score
