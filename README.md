@@ -57,7 +57,7 @@ Overall, we think we have developed and fullfilled all the objectives that we pr
 However, there are some changes that we have to make, specifically, in the beginning, we thought that our integrated facial landmark model could achieve a good score to be our main model but as a result, the facial landmark integrated model does not satisfy our goal, the predictions are too poor and because of the biased dataset, we have to change to transfer learning to improve the outcomes. We only intended to experiment with 3 models but because of poor accuracy, we end up experimenting 5 models in total. Our VGG16-VA prediction is also not perfect, we think that if we are able to get the model training on AffectNet, it will be better but the AffectNet is very hard to get and there aren't many dataset with Arousal-Valence labels.
 
 ## Citing
-All the game assets and musics in the game are not ours.
+All the assets and musics in the game are not ours.
 
 * Paimon - discord emoji. Emoji.gg - Discord, Slack &amp; Guilded emojis. (n.d.). Retrieved April 15, 2022, from https://emoji.gg/pack/9403-paimon 
 * Free logo maker: Design custom logos | Adobe Express. (n.d.). Retrieved April 15, 2022, from https://www.adobe.com/express/create/logo 
