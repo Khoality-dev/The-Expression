@@ -11,9 +11,10 @@ All the requirement dependencies are listed in requirements.txt
 
 ## Structure
 Repository structure
+- Dataset folder contains all the code to process the AFEW-VA dataset, from restructuring original AFEW-VA dataset to extracted facial expressions and packing them into a single h5 file. <br>
+- Dataset/self-annotation images is our self-annotations and also is a small portion of test set
 - the-expression.py is a driver to run the game. <br>
 - Model/model.ipynb is a notebook to test and do experimential with the proposed models, only the VGG16-VA was integrated to the main game. <br>
-- Dataset folder contains all the code to process the AFEW-VA dataset, from restructuring original AFEW-VA dataset to extracted facial expressions and packing them into a single h5 file. <br>
 - Game_Data/target_samples is the folder for customized target images, the images have to be processed using Dataset/game_target_generator.py before put in to this folder. (refering to Dataset/README.md for more details) <br>
 
 The processed AFEW-VA dataset can be found [here](https://tinyurl.com/AFEW-VA-processed), the link included: <br>
@@ -41,21 +42,25 @@ Python version 3.7.8 on
 ## Self-Evaluation
 Overall, we think we have developed and fullfilled all the objectives that we proposed.
 - About Game <br>
+[:heavy_check_mark:] Camera Integration <br>
 [:heavy_check_mark:] Game UI <br>
 [:heavy_check_mark:] Music <br>
 [:heavy_check_mark:] Animation <br>
 - Machine Learning Model  <br>
-[:heavy_check_mark:] Functional model <br>
+[:heavy_check_mark:] Functional Model <br>
 [:heavy_check_mark:] Cross-validation <br>
 - Dataset <br>
 [:heavy_check_mark:] Processing <br>
-[:heavy_check_mark:] 20 Self-annotation images <br>
-[:heavy_check_mark:] Inter-rater score <br>
+[:heavy_check_mark:] 20 Self-annotation Images <br>
+[:heavy_check_mark:] Inter-rater Score <br>
+- Features not in our plan but we did <br>
+[:heavy_check_mark:] User can add their customized target images <br>
+[:heavy_check_mark:] Real-time face detection <br>
 
-However, there are some changes that we have to make, specifically, in the beginning, we thought that our integrated facial landmark model could achieve a good score to be our main model but as a result, the facial landmark integrated model does not satisfy our goal, the predictions are too poor and because of the biased dataset, we have to change to transfer learning to improve the outcomes. Our VGG16-VA prediction is also not perfect, we think that if we are able to get the model training on AffectNet, it will be better but the AffectNet is very hard to get and there aren't many dataset with Arousal-Valence labels.
+However, there are some changes that we have to make, specifically, in the beginning, we thought that our integrated facial landmark model could achieve a good score to be our main model but as a result, the facial landmark integrated model does not satisfy our goal, the predictions are too poor and because of the biased dataset, we have to change to transfer learning to improve the outcomes. We only intended to experiment with 3 models but because of poor accuracy, we end up experimenting 5 models in total. Our VGG16-VA prediction is also not perfect, we think that if we are able to get the model training on AffectNet, it will be better but the AffectNet is very hard to get and there aren't many dataset with Arousal-Valence labels.
 
 ## Citing
-All the game assets and musics in the game are not ours.
+All the assets and musics in the game are not ours.
 
 * Paimon - discord emoji. Emoji.gg - Discord, Slack &amp; Guilded emojis. (n.d.). Retrieved April 15, 2022, from https://emoji.gg/pack/9403-paimon 
 * Free logo maker: Design custom logos | Adobe Express. (n.d.). Retrieved April 15, 2022, from https://www.adobe.com/express/create/logo 
