@@ -16,7 +16,7 @@ if __name__ == "__main__":
     valences = []
     landmarks = []
 
-
+    #list name of subfolders in data_dir
     folders = [f for f in os.listdir(data_dir) if os.path.isdir(os.path.join(data_dir, f))]
     print("Formating file structure...")
     with alive_bar(len(folders)) as bar:
@@ -24,11 +24,11 @@ if __name__ == "__main__":
             #print("/"+folder_name+"/...")
             files = [f for f in os.listdir(os.path.join(data_dir,folder_name)) if os.path.isfile(os.path.join(os.path.join(data_dir,folder_name), f))]
             for file_name in files:
-                if os.path.splitext(file_name)[1] == ".png":
+                if os.path.splitext(file_name)[1] == ".png": #Only move png files
                     if (not(os.path.exists(os.path.join(target_dir, folder_name+"_"+file_name)))):
                         shutil.move(os.path.join(os.path.join(data_dir, folder_name), file_name), os.path.join(target_dir, folder_name+"_"+file_name))
             
-            #label formating
+            #Retrive information from dataset labels
             with open(os.path.join(os.path.join(data_dir, folder_name), folder_name+ ".json")) as jsonFile:
                 jsonData = json.load(jsonFile)['frames']
                 for frame in jsonData:
@@ -37,6 +37,8 @@ if __name__ == "__main__":
                     valences.append(jsonData[frame]['valence'])
                     landmarks.append(np.array(jsonData[frame]['landmarks']))
             bar()
+
+    #Create csv
     print("Extracting metainfo...")
     dict = {'file_name': new_file_names, 'arousal': arousals, 'valence': valences}
     landmarks = np.reshape(np.array(landmarks), (len(landmarks), len(landmarks[0]) * 2))
