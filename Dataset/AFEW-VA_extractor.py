@@ -6,6 +6,8 @@ from utils.imglib import load_image
 import argparse
 import pandas as pd
 
+
+#calculate number of landmarks covered by the bounding box x, y, w, h
 def landmark_inbox(x, y, w, h, landmarks):
     cnt = 0
     for landmark_idx in range(68):
@@ -47,13 +49,13 @@ def extractor(args):
                     faces = detector.detectMultiScale(img)
                     best_n_landmarks = 0
                     (best_x, best_y, best_w, best_h) = (-1,-1,-1,-1)
-                    for face in faces:
+                    for face in faces: #For each face detected, check if the face is the one in the real in labeled data by comparing number of landmarks in the bouding box of the face
                         (x, y, w, h) = face
                         n_landmark_points = landmark_inbox(x,y,w,h, landmarks[idx])
                         if (best_n_landmarks < n_landmark_points):
                             best_n_landmarks = n_landmark_points
                             (best_x, best_y, best_w, best_h) = (x, y, w, h)
-                    if ((best_x, best_y, best_w, best_h) != (-1,-1,-1,-1)):
+                    if ((best_x, best_y, best_w, best_h) != (-1,-1,-1,-1)): # crop the face when detected
                         crop_img = img[best_y:best_y+best_h, best_x:best_x+best_w]
                         crop_img = cv2.resize(crop_img, (target_H,target_W))
                         face_filename = os.path.join(target_dir, os.path.splitext(img_name)[0] + ".png")
