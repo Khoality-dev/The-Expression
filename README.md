@@ -42,18 +42,19 @@ Python version 3.7.8 on
 ## Self-Evaluation
 Overall, we think we have developed and fullfilled all the objectives that we proposed.
 - About Game <br>
+[:heavy_check_mark:] Camera Integration <br>
 [:heavy_check_mark:] Game UI <br>
 [:heavy_check_mark:] Music <br>
 [:heavy_check_mark:] Animation <br>
 - Machine Learning Model  <br>
-[:heavy_check_mark:] Functional model <br>
+[:heavy_check_mark:] Functional Model <br>
 [:heavy_check_mark:] Cross-validation <br>
 - Dataset <br>
 [:heavy_check_mark:] Processing <br>
-[:heavy_check_mark:] 20 Self-annotation images <br>
-[:heavy_check_mark:] Inter-rater score <br>
+[:heavy_check_mark:] 20 Self-annotation Images <br>
+[:heavy_check_mark:] Inter-rater Score <br>
 
-However, there are some changes that we have to make, specifically, in the beginning, we thought that our integrated facial landmark model could achieve a good score to be our main model but as a result, the facial landmark integrated model does not satisfy our goal, the predictions are too poor and because of the biased dataset, we have to change to transfer learning to improve the outcomes. Our VGG16-VA prediction is also not perfect, we think that if we are able to get the model training on AffectNet, it will be better but the AffectNet is very hard to get and there aren't many dataset with Arousal-Valence labels.
+However, there are some changes that we have to make, specifically, in the beginning, we thought that our integrated facial landmark model could achieve a good score to be our main model but as a result, the facial landmark integrated model does not satisfy our goal, the predictions are too poor and because of the biased dataset, we have to change to transfer learning to improve the outcomes. We only intended to experiment with 3 models but because of poor accuracy, we end up experimenting 5 models in total. Our VGG16-VA prediction is also not perfect, we think that if we are able to get the model training on AffectNet, it will be better but the AffectNet is very hard to get and there aren't many dataset with Arousal-Valence labels.
 
 ## Citing
 All the game assets and musics in the game are not ours.
