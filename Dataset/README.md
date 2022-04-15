@@ -8,11 +8,11 @@ python ./AFEW-VA_formatter.py
 ```
 - To extract facial images from AFEW-VA images above
 ```bash
-python ./AFEW-VA_extractor.py -src [path of source] -dst [path of destination] -H [target height] -W [target width] -dmodel [path of facial detection model]
+python ./AFEW-VA_extractor.py -src [path of source] -dst [path of destination] -H [target height] -W [target width]
 ```
 - To extract facial images from customized dataset
 ```bash
-python ./extractor.py -src [path of source] -dst [path of destination] -H [target height] -W [target width] -dmodel [path of facial detection model]
+python ./extractor.py -src [path of source] -dst [path of destination] -H [target height] -W [target width]
 ```
 - To pack facial images into single h5 file
 ```bash
