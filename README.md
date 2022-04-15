@@ -17,6 +17,8 @@ Repository structure
 - Model/model.ipynb is a notebook to test and do experimential with the proposed models, only the VGG16-VA was integrated to the main game. <br>
 - Game_Data/target_samples is the folder for customized target images, the images have to be processed using Dataset/game_target_generator.py before put in to this folder. (refering to Dataset/README.md for more details) <br>
 
+The original AFEW-VA dataset can be found [here](https://ibug.doc.ic.ac.uk/resources/afew-va-database/). <br>
+
 The processed AFEW-VA dataset can be found [here](https://tinyurl.com/AFEW-VA-processed), the link included: <br>
 - A trained model of VGG16 transfer learning structure "trained_VGG16-VA.h5"
 - An image dataset packed into h5 "facial_data.h5" (the README.md in the dataset folder has more details to unpack this file)
@@ -70,3 +72,7 @@ All the assets and musics in the game are not ours.
 * Royalty free music by BENSOUND. Bensound. (n.d.). Retrieved April 15, 2022, from https://www.bensound.com/ 
 * Awesome Free assets for your next video project. Mixkit. (n.d.). Retrieved April 15, 2022, from https://mixkit.co/ 
 * Free stock music: Download free music for videos. FiftySounds. (n.d.). Retrieved April 15, 2022, from https://www.fiftysounds.com/ 
+
+* J. Kossaifi, G. Tzimiropoulos, S. Todorovic and M. Pantic, "AFEW-VA database for valence and arousal estimation in-the-wild", in Image and Vision Computing, 2017. 
+
+* A. Dhall, R. Goecke, S. Lucey and T. Gedeon, "Collecting Large, Richly Annotated Facial-Expression Databases from Movies," in IEEE MultiMedia, vol. 19, no. 3, pp. 34-41, July-Sept. 2012.
