@@ -7,7 +7,15 @@ An Emotional Game for Social Expression Learning
 - A webcam
 
 ## Dependencies
-All the requirement dependencies are listed in requirements.txt
+All necessary dependencies to run the game are listed in requirements.txt
+
+In order to run the notebook Model/model.ipynb, you may need:
+- cmake
+- dlib
+- seaborn sns
+- imblearn <br>
+
+We do not include those because sometimes it may produce errors when installing. <br>
 
 ## Structure
 Repository structure
@@ -64,6 +72,8 @@ Overall, we think we have developed and fullfilled all the objectives that we pr
 However, there are some changes that we have to make, specifically, in the beginning, we thought that our integrated facial landmark model could achieve a good score to be our main model but as a result, the facial landmark integrated model does not satisfy our goal, the predictions are too poor and because of the biased dataset, we have to change to transfer learning to improve the outcomes. We only intended to experiment with 3 models but because of poor accuracy, we end up experimenting 5 models in total. Our VGG16-VA prediction is also not perfect, we think that if we are able to get the model training on AffectNet, it will be better but the AffectNet is very hard to get and there aren't many dataset with Arousal-Valence labels.
 
 ## Citing
+External Libraries used refers to requirements.txt and dependencies section above. <br>
+
 All the assets and musics in the game are not ours.
 
 * Paimon - discord emoji. Emoji.gg - Discord, Slack &amp; Guilded emojis. (n.d.). Retrieved April 15, 2022, from https://emoji.gg/pack/9403-paimon 
