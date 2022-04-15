@@ -22,7 +22,7 @@ Repository structure
 - Dataset folder contains all the code to process the AFEW-VA dataset, from restructuring original AFEW-VA dataset to extracted facial expressions and packing them into a single h5 file. <br>
 - Dataset/self-annotation images includes images that we annotated by ourselves, our annotations and also a mixed annotations (taking average of 2 self-annotations)
 - the-expression.py is a driver to run the game. <br>
-- Model/model.ipynb is a notebook to test and do experimential with the proposed models, only the VGG16-VA was integrated to the main game. <br>
+- Model/model.ipynb is a notebook for training, testing and doing experiments with the proposed models, only the VGG16-VA is integrated to the main game. <br>
 - Game_Data/target_samples is the folder for customized target images, the images have to be processed using Dataset/game_target_generator.py before put in to this folder. (refering to Dataset/README.md for more details) <br>
 - Dataset/utils/haarcascade_frontalface_alt2.xml is haar cascade face detector of opencv, can be downloaded [here](https://github.com/opencv/opencv/tree/master/data/haarcascades).
 - Dataset/utils/shape_predictor_68_face_landmarks.dat is facial landmarks detector of dlib, can be downloaded [here](https://github.com/davisking/dlib-models).
@@ -31,7 +31,7 @@ The original AFEW-VA dataset can be found [here](https://ibug.doc.ic.ac.uk/resou
 
 The processed AFEW-VA dataset can be found [here](https://tinyurl.com/AFEW-VA-processed), the link included: <br>
 - A trained model of VGG16 transfer learning structure "trained_VGG16-VA.h5"
-- An image dataset packed into h5 "facial_data.h5" (the README.md in the dataset folder has more details to unpack this file)
+- An image dataset packed into h5 "facial_data.h5" (refering to unpacker.py in Dataset/README.md to have more details on unpacking this file)
 - The true labels from AFEW-VA "label_data.csv"
 
 ## How to Use
