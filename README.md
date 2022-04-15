@@ -12,7 +12,7 @@ All the requirement dependencies are listed in requirements.txt
 ## Structure
 Repository structure
 - Dataset folder contains all the code to process the AFEW-VA dataset, from restructuring original AFEW-VA dataset to extracted facial expressions and packing them into a single h5 file. <br>
-- Dataset/self-annotation images is our self-annotations and also is a small portion of test set
+- Dataset/self-annotation images includes images that we annotated by ourselves, our annotations and also a mixed annotations (taking average of 2 self-annotations)
 - the-expression.py is a driver to run the game. <br>
 - Model/model.ipynb is a notebook to test and do experimential with the proposed models, only the VGG16-VA was integrated to the main game. <br>
 - Game_Data/target_samples is the folder for customized target images, the images have to be processed using Dataset/game_target_generator.py before put in to this folder. (refering to Dataset/README.md for more details) <br>
