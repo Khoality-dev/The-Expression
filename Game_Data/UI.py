@@ -256,7 +256,7 @@ class Play_Menu():
 
         self.AVEstimator = AVEstimator
         self.FDetector = FDetector
-        self.round = Match(self.camera, self.FDetector, self.AVEstimator, length_in_milisec = 30*1000)
+        self.round = Match(self.camera, self.FDetector, self.AVEstimator, length_in_milisec = 20*1000)
         self.starting = pygame.time.get_ticks()
         self.timer_display = Text_Object(center_x, 50, "Ready!")
 
@@ -287,6 +287,14 @@ class Play_Menu():
                 self.text_score_p2.set_text("Error Value: "+str(self.round.player_2_score))
                 self.text_score_p2.update()
         else:
+            if (self.round.player_1_best_score < self.round.player_2_best_score):
+                self.timer_display.set_text("Player 1 wins!")
+            elif (self.round.player_1_best_score > self.round.player_2_best_score):
+                self.timer_display.set_text("Player 2 wins!")
+            else:
+                self.timer_display.set_text("Tied!")
+
+            self.timer_display.update()
             for button in self.buttons:
                 button.update()
 
@@ -311,6 +319,7 @@ class Play_Menu():
                 self.screen.blit(face_icon, (self.camera.portrait_2_loc[0], self.camera.portrait_2_loc[1] - not_face_icon.get_size()[1]))
             
         else:
+            self.timer_display.draw(screen)
             if type(self.round.player_1_best_face) is pygame.Surface:
                 img_pos_x, img_pos_y = self.camera.portrait_1_loc[0]+50, self.camera.portrait_1_loc[1]
                 score = Text_Object(img_pos_x + self.camera.cam_size[0]/2, 0, size = 24, text = "Lowest Error Value: " + str(self.round.player_1_best_score))
