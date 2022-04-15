@@ -44,7 +44,7 @@ def setup():
     return screen, clock
 
 #Load models Arousal_Valence Estimator and Face Detector
-AV = AV_Estimator(path = "Model/best_model.h5")
+AV = AV_Estimator(path = "Model/trained_VGG16-VA.h5")
 FD = Face_Detector()
 
 pycamera = camera_setup()
