@@ -3,39 +3,39 @@ This module is to format the structure of AFEW-VA dataset and extract faces from
 
 ## How to use
 
-### Only use for AFEW-VA dataset
-- To clean the structure, the module will move all images data from sub folders of "AFEW-VA" to one single folder and join all the arousal-valence data to a single label_data.csv
+### Only for AFEW-VA dataset
+#### To clean the structure: the module will move all images data from sub folders of "AFEW-VA" to one single folder and join all the arousal-valence data to a single label_data.csv
 ```bash
 python ./AFEW-VA_formatter.py
 ```
-For example: putting all the scene folders into a subfolder named "AFEW-VA", running above command will create a new folder named "src_data" and move all the images into that folder.
+For example: putting all the scene folders into a subfolder named "AFEW-VA", running above command will create a new folder named "src_data" and move all the images into that folder.<br/> 
 
-- To extract facial images from AFEW-VA images above
+#### To extract facial images from AFEW-VA images above
 ```bash
 python ./AFEW-VA_extractor.py -src [path of source] -dst [path of destination] -H [target height] -W [target width]
 ```
 For example: python ./AFEW-VA_extractor.py -src src_data -dst facial_data -H 64 -W 64. <br>
 
 ### Other type of dataset
-- To extract facial images from customized dataset
+#### To extract facial images from customized dataset
 ```bash
 python ./extractor.py -src [path of source] -dst [path of destination] -H [target height] -W [target width]
 ```
 For example: python ./extractor.py -src src_data -dst facial_data -H 64 -W 64. <br>
 
-- To pack facial images into single h5 file
+#### To pack facial images into single h5 file
 ```bash
 python ./packer.py -src [path of source] -dst [path of destination]
 ```
 For example: python ./packer.py -src facial_data -dst facial_data.h5 <br>
 
-- To unpack facial images from h5 file
+#### To unpack facial images from h5 file
 ```bash
 python ./unpacker.py -src [path of h5 file] -dst [path of destination]
 ```
 For example: python ./unpacker.py -src facial_data.h5 -dst facial_data <br>
 
-- To create customized target image
+#### To create customized target image
 ```bash
 python ./game_target_generator.py -src [path of source] -dst [path of destination]
 ```
