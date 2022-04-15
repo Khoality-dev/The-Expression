@@ -131,8 +131,4 @@ dmypy.json
 .pyre/
 
 # Others
-Game_Data/background/emojis
-Dataset/facial_data
-Dataset/src_data
-Dataset/AFEW-VA
 Dataset/facial_data.h5
