@@ -16,6 +16,8 @@ Repository structure
 - the-expression.py is a driver to run the game. <br>
 - Model/model.ipynb is a notebook to test and do experimential with the proposed models, only the VGG16-VA was integrated to the main game. <br>
 - Game_Data/target_samples is the folder for customized target images, the images have to be processed using Dataset/game_target_generator.py before put in to this folder. (refering to Dataset/README.md for more details) <br>
+- Dataset/utils/haarcascade_frontalface_alt2.xml is haar cascade face detector of opencv, can be downloaded [here](https://github.com/opencv/opencv/tree/master/data/haarcascades).
+- Dataset/utils/shape_predictor_68_face_landmarks.dat is facial landmarks detector of dlib, can be downloaded [here](https://github.com/davisking/dlib-models).
 
 The original AFEW-VA dataset can be found [here](https://ibug.doc.ic.ac.uk/resources/afew-va-database/). <br>
 
