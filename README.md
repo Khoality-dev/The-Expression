@@ -74,6 +74,7 @@ All the assets and musics in the game are not ours.
 * Royalty free music by BENSOUND. Bensound. (n.d.). Retrieved April 15, 2022, from https://www.bensound.com/ 
 * Awesome Free assets for your next video project. Mixkit. (n.d.). Retrieved April 15, 2022, from https://mixkit.co/ 
 * Free stock music: Download free music for videos. FiftySounds. (n.d.). Retrieved April 15, 2022, from https://www.fiftysounds.com/ 
+* Google. (n.d.). Voltaire - Google Font. Google fonts. Retrieved April 15, 2022, from https://fonts.google.com/specimen/Voltaire
 
 * J. Kossaifi, G. Tzimiropoulos, S. Todorovic and M. Pantic, "AFEW-VA database for valence and arousal estimation in-the-wild", in Image and Vision Computing, 2017. 
 
