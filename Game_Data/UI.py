@@ -78,7 +78,7 @@ class Button(Game_Object):
         self.text = Text_Object(self.x + width/2, self.y + height/2, text = title)
         self.state = state
         self.icons = []
-        self.sounds = pygame.mixer.Sound("Game_Data/sound/mixkit-cool-interface-click-tone-2568.wav")
+        #self.sounds = pygame.mixer.Sound("Game_Data/sound/mixkit-cool-interface-click-tone-2568.wav")
         return
 
     def mouse_normal(self):
@@ -91,7 +91,7 @@ class Button(Game_Object):
         self.text.color = (255,255,255)
         self.color = (0,0,0)
         pygame.mouse.set_cursor(pygame.SYSTEM_CURSOR_HAND)
-        self.sounds.play()
+        #self.sounds.play()
         return
 
     def on_hover(self):

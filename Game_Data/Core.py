@@ -32,7 +32,7 @@ class Match():
         self.isFace_p1 = False
         self.isFace_p2 = False
 
-        self.bgm_victory = pygame.mixer.Sound("Game_Data/sound/fiftysounds-sfx-victory5.mp3")
+        #self.bgm_victory = pygame.mixer.Sound("Game_Data/sound/fiftysounds-sfx-victory5.mp3")
 
         self.target = np.array(load_and_get_random_img())
         target_face = self.FDetector.predict_crop(self.target)
@@ -56,8 +56,8 @@ class Match():
         if (self.state == 1):
             if (self.get_countdown() <= 0):
                 self.state = 2
-                pygame.mixer.music.unload()
-                self.bgm_victory.play()
+                #pygame.mixer.music.unload()
+                #self.bgm_victory.play()
 
             if not(self.isEnd()):
                 self.current_time = pygame.time.get_ticks()
