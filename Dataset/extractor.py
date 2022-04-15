@@ -1,3 +1,5 @@
+# References
+# Face Detection using Haar Cascades: https://docs.opencv.org/3.4.1/d7/d8b/tutorial_py_face_detection.html
 import os
 
 from alive_progress import alive_bar
