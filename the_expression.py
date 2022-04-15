@@ -19,7 +19,7 @@ def camera_setup():
     print("List camera available:")
     for camera_idx in range(len(list_pycam)):
         print(camera_idx,". ",list_pycam[camera_idx], sep = '')
-
+    
     while (True):
         pycamera = input("Enter camera number: ")
         if int(pycamera) >= len(list_pycam) or int(pycamera) < 0:
@@ -45,6 +45,10 @@ AV = AV_Estimator(path = "Model/best_model.h5")
 FD = Face_Detector()
 
 pycamera = camera_setup()
+
+if type(pycamera) is bool:
+    quit()
+
 screen, clock = setup()
 camera = Camera(screen, pycamera, flip_x = False, flip_y = False, rotating_state = 0)
 background = Animated_Background(screen = screen)
