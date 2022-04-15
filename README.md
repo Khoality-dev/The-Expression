@@ -22,10 +22,6 @@ The processed AFEW-VA dataset can be found [here](https://tinyurl.com/AFEW-VA-pr
 - The true labels from AFEW-VA "label_data.csv"
 
 ## How to Use
-- Setup a virtual environment
-```bash
-python -m venv [enviroment name]
-```
 - Install dependencies
 ```bash
 pip install -r requirements.txt
