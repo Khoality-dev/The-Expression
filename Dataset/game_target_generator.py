@@ -1,3 +1,4 @@
+#This module is to create target samples for the game, the module will detect if there is a face in the image and will resize the image into appropriate size
 import os
 
 from alive_progress import alive_bar
@@ -11,12 +12,14 @@ def extractor(args):
         print("ERROR: Detector model does not exist!")
         return 1
 
+    #Haar Cascade init
     detector = cv2.CascadeClassifier(args.detector_model)
     data_dir = args.src
     target_dir = args.dst
     os.makedirs(target_dir, exist_ok=True)
     target_H = args.height
     target_W = args.width
+    
     img_files = [f for f in os.listdir(data_dir) if os.path.isfile(os.path.join(data_dir, f)) and (os.path.splitext(f)[1] == '.png' or os.path.splitext(f)[1] == '.jpg')]
     print("Extracting faces from images")
     with alive_bar(len(img_files)) as bar:

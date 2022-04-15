@@ -308,11 +308,13 @@ class Play_Menu():
             self.text_score_p1.draw(screen)
             self.text_score_p2.draw(screen)
 
+            #Check if p1 face detected
             if (self.round.isFace_p1 == False):
                 self.screen.blit(not_face_icon, (self.camera.portrait_1_loc[0], self.camera.portrait_1_loc[1] - face_icon.get_size()[1]))
             else:
                 self.screen.blit(face_icon, (self.camera.portrait_1_loc[0], self.camera.portrait_1_loc[1] - not_face_icon.get_size()[1]))
 
+            #Check if p2 face detected
             if (self.round.isFace_p2 == False):
                 self.screen.blit(not_face_icon, (self.camera.portrait_2_loc[0], self.camera.portrait_2_loc[1] - face_icon.get_size()[1]))
             else:

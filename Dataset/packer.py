@@ -1,3 +1,4 @@
+#This module is to pack the dataset into single h5 file for faster Google Colab loading
 import argparse
 import os
 from alive_progress import alive_bar
