@@ -29,10 +29,11 @@ Repository structure
 
 The original AFEW-VA dataset can be found [here](https://ibug.doc.ic.ac.uk/resources/afew-va-database/). <br>
 
-The processed AFEW-VA dataset can be found [here](https://tinyurl.com/AFEW-VA-processed), the link included: <br>
+The processed dataset can be found [here](https://tinyurl.com/AFEW-VA-processed), the link included: <br>
 - A trained model of VGG16 transfer learning structure "trained_VGG16-VA.h5"
-- An image dataset packed into h5 "facial_data.h5" (refering to unpacker.py in Dataset/README.md to have more details on unpacking this file)
-- The true labels from AFEW-VA "label_data.csv"
+- Processed AFEW-VA dataset packed into h5 "facial_data.h5" (refering to unpacker.py in Dataset/README.md to have more details on unpacking this file)
+- The true labels for AFEW-VA "label_data.csv"
+- A self-annotated folder dataset
 
 ## How to Use
 - Install dependencies
