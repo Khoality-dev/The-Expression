@@ -1,7 +1,8 @@
 # The Expression - CMPT 419 Project
-An Emotional Game for Social Expression Learning
+An Emotional Game for Social Expression Learning - \[[Documentation](https://drive.google.com/file/d/1s5lzmO1JwgVfCa-e2TavY_U0pZaa-gF1/view)\]
 
 ![Demo](Demo.png)
+
 
 ## Requirements
 - A webcam
