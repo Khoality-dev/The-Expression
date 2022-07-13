@@ -5,7 +5,7 @@ An Emotional Game for Social Expression Learning - \[[Documentation](https://dri
 
 
 ## Requirements
-- A webcam
+- Webcam
 
 ## Dependencies
 All necessary dependencies to run the game are listed in requirements.txt
